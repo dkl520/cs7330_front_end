@@ -1,0 +1,4 @@
+/* 使用Tailwind的基础样式 */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';

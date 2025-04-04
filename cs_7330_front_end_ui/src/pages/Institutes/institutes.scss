@@ -1,0 +1,46 @@
+// 变量定义
+$padding-base: 24px;
+$margin-base: 16px;
+$border-radius: 8px;
+
+// Mixins
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  padding: $padding-base;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    @include flex-between;
+    margin-bottom: $padding-base;
+  }
+}
+
+md-elevated-card {
+  margin: $margin-base 0;
+  
+  .card-content {
+    padding: $margin-base;
+  }
+}
+
+md-filled-text-field {
+  width: 100%;
+  margin: $margin-base 0;
+}
+
+.button-container {
+  display: flex;
+  gap: $margin-base;
+  margin-top: $padding-base;
+}
+
+md-list {
+  background-color: var(--md-sys-color-surface);
+  border-radius: $border-radius;
+}
