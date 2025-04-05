@@ -28,7 +28,7 @@ function App() {
     <div className="min-h-screen relative">
       {/* 渐变背景 */}
       <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" />
-      
+
       {/* 动态波浪效果 */}
       <div className="fixed inset-0 opacity-30">
         <div className="absolute inset-0 bg-[linear-gradient(45deg,#4f46e510_25%,transparent_25%,transparent_75%,#4f46e510_75%,#4f46e510_100%)] bg-[length:60px_60px] animate-[gradient_3s_linear_infinite]" />
@@ -81,10 +81,10 @@ function App() {
             backdropFilter: 'blur(8px)'
           }}
         >
-          <BottomNavigationAction label="搜索" icon={<SearchIcon />} />
-          <BottomNavigationAction label="项目" icon={<ProjectIcon />} />
-          <BottomNavigationAction label="机构" icon={<SchoolIcon />} />
-          <BottomNavigationAction label="用户" icon={<GroupIcon />} />
+          <BottomNavigationAction label="Post Search" icon={<SearchIcon />} />
+          <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
+          <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
+          <BottomNavigationAction label="Users" icon={<GroupIcon />} />
         </BottomNavigation>
       </div>
     </div>
