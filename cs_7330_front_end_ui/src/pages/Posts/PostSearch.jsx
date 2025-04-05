@@ -14,7 +14,7 @@ import {
     Collapse, IconButton, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 
-// 帖子详情对话框
+// Post Detail Dialog
 const PostDetailDialog = ({ post, open, onClose }) => {
     if (!post) return null;
     
@@ -27,7 +27,7 @@ const PostDetailDialog = ({ post, open, onClose }) => {
         >
             <DialogTitle>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h6">帖子详情</Typography>
+                    <Typography variant="h6">Post Details</Typography>
                     <Chip label={post.platform} color="primary" />
                 </Box>
             </DialogTitle>
@@ -39,24 +39,24 @@ const PostDetailDialog = ({ post, open, onClose }) => {
                 </Paper>
                 <Box sx={{ mt: 2 }}>
                     <Typography variant="subtitle2" color="text.secondary">
-                        发布信息
+                        Post Information
                     </Typography>
                     <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
                         <Typography variant="body2">
-                            平台：{post.platform}
+                            Platform: {post.platform}
                         </Typography>
                         <Typography variant="body2">
-                            作者：{post.author}
+                            Author: {post.author}
                         </Typography>
                         <Typography variant="body2">
-                            时间：{post.postTime}
+                            Time: {post.postTime}
                         </Typography>
                     </Stack>
                 </Box>
                 {post.projects.length > 0 && (
                     <Box sx={{ mt: 2 }}>
                         <Typography variant="subtitle2" color="text.secondary">
-                            相关项目
+                            Related Projects
                         </Typography>
                         <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: 'wrap', gap: 1 }}>
                             {post.projects.map((project, index) => (
@@ -71,15 +71,15 @@ const PostDetailDialog = ({ post, open, onClose }) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>关闭</Button>
+                <Button onClick={onClose}>Close</Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-// 帖子查询组件
+// Post Search Component
 const PostSearch = () => {
-    // 状态管理
+    // State management
     const [filters, setFilters] = useState({
         platform: '',
         username: '',
@@ -96,35 +96,35 @@ const PostSearch = () => {
     const [selectedPost, setSelectedPost] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     
-    // 模拟数据
+    // Mock data
     const mockResults = [
         {
             id: 1,
-            content: '这是一个示例帖子内容，内容很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长...',
+            content: 'This is an example post content, very long very long very long very long very long very long very long very long very long very long...',
             author: 'JohnDoe',
             platform: 'Twitter',
             postTime: '2024-03-15 14:30',
-            projects: ['AI研究项目', '数据分析项目']
+            projects: ['AI Research Project', 'Data Analysis Project']
         },
         {
             id: 2,
-            content: '另一个帖子的内容示例，这里展示的是一些普通的内容，没有特别的格式和要求。',
+            content: 'Another example post content, showing some regular content without special formatting or requirements.',
             author: 'JaneSmith',
             platform: 'Facebook',
             postTime: '2024-03-14 10:15',
-            projects: ['社交媒体趋势', '用户行为分析', '内容策略研究']
+            projects: ['Social Media Trends', 'User Behavior Analysis', 'Content Strategy Research']
         },
         {
             id: 3,
-            content: '第三篇帖子，我们要分析一下不同长度内容的显示效果。',
+            content: 'Third post, we need to analyze the display effect of content with different lengths.',
             author: 'BobJohnson',
             platform: 'Instagram',
             postTime: '2024-03-13 09:45',
-            projects: ['短内容影响力研究']
+            projects: ['Short Content Impact Research']
         }
     ];
     
-    // 处理函数
+    // Handler functions
     const handleFilterChange = (field, value) => {
         setFilters(prev => ({
             ...prev,
@@ -133,7 +133,7 @@ const PostSearch = () => {
     };
     
     const handleSearch = () => {
-        // 实际应用中这里会调用API
+        // In actual application, this would call an API
         setSearchResults(mockResults);
         setPage(0);
     };
@@ -171,7 +171,7 @@ const PostSearch = () => {
         setShowFilters(!showFilters);
     };
     
-    // 计算筛选条件数量（用于badge显示）
+    // Calculate active filter count (for badge display)
     const getActiveFilterCount = () => {
         return Object.values(filters).filter(val => 
             val !== '' && val !== null && val !== undefined
@@ -183,7 +183,7 @@ const PostSearch = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4">帖子查询</Typography>
+                <Typography variant="h4">Post Search</Typography>
                 
                 <Button
                     variant="outlined"
@@ -194,11 +194,11 @@ const PostSearch = () => {
                     }
                     onClick={toggleFilters}
                 >
-                    {showFilters ? '收起筛选' : '展开筛选'}
+                    {showFilters ? 'Hide Filters' : 'Show Filters'}
                 </Button>
             </Box>
             
-            {/* 筛选面板 - 使用绝对定位 */}
+            {/* Filter Panel - using absolute positioning */}
             <Box sx={{ 
                 position: 'relative', 
                 zIndex: 10,
@@ -216,17 +216,17 @@ const PostSearch = () => {
                         }}
                     >
                         <Stack spacing={3}>
-                            <Typography variant="h6">搜索条件</Typography>
+                            <Typography variant="h6">Search Criteria</Typography>
                             
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                                 <FormControl sx={{ width: '220px' }} size="small">
-                                    <InputLabel>社交媒体平台</InputLabel>
+                                    <InputLabel>Social Media Platform</InputLabel>
                                     <Select
                                         value={filters.platform}
-                                        label="社交媒体平台"
+                                        label="Social Media Platform"
                                         onChange={(e) => handleFilterChange('platform', e.target.value)}
                                     >
-                                        <MenuItem value="">不限</MenuItem>
+                                        <MenuItem value="">All</MenuItem>
                                         {['Twitter', 'Facebook', 'Instagram'].map(platform => (
                                             <MenuItem key={platform} value={platform}>
                                                 {platform}
@@ -238,7 +238,7 @@ const PostSearch = () => {
                                 <TextField
                                     sx={{ width: '220px' }}
                                     size="small"
-                                    label="用户名"
+                                    label="Username"
                                     value={filters.username}
                                     onChange={(e) => handleFilterChange('username', e.target.value)}
                                 />
@@ -246,7 +246,7 @@ const PostSearch = () => {
                                 <TextField
                                     sx={{ width: '220px' }}
                                     size="small"
-                                    label="作者姓名"
+                                    label="Author Name"
                                     value={filters.authorName}
                                     onChange={(e) => handleFilterChange('authorName', e.target.value)}
                                 />
@@ -254,15 +254,15 @@ const PostSearch = () => {
                                 <TextField
                                     sx={{ width: '220px' }}
                                     size="small"
-                                    label="关键词"
+                                    label="Keyword"
                                     value={filters.keyword || ''}
                                     onChange={(e) => handleFilterChange('keyword', e.target.value)}
-                                    placeholder="搜索帖子内容"
+                                    placeholder="Search post content"
                                 />
                                 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="开始日期"
+                                        label="Start Date"
                                         value={filters.startDate}
                                         onChange={(date) => handleFilterChange('startDate', date)}
                                         slotProps={{ 
@@ -276,7 +276,7 @@ const PostSearch = () => {
                                 
                                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                                     <DatePicker
-                                        label="结束日期"
+                                        label="End Date"
                                         value={filters.endDate}
                                         onChange={(date) => handleFilterChange('endDate', date)}
                                         slotProps={{ 
@@ -295,14 +295,14 @@ const PostSearch = () => {
                                     startIcon={<ClearIcon />}
                                     onClick={handleClear}
                                 >
-                                    清除
+                                    Clear
                                 </Button>
                                 <Button
                                     variant="contained"
                                     startIcon={<SearchIcon />}
                                     onClick={handleSearch}
                                 >
-                                    搜索
+                                    Search
                                 </Button>
                             </Stack>
                         </Stack>
@@ -310,19 +310,17 @@ const PostSearch = () => {
                 </Collapse>
             </Box>
             
-          
-            
-            {/* 表格区域 */}
+            {/* Table Area */}
             <TableContainer component={Paper}>
                 <Table aria-label="posts table">
                     <TableHead>
                         <TableRow>
                             <TableCell></TableCell>
-                            <TableCell>内容预览</TableCell>
-                            <TableCell>平台</TableCell>
-                            <TableCell>作者</TableCell>
-                            <TableCell>发布时间</TableCell>
-                            <TableCell>相关项目</TableCell>
+                            <TableCell>Content Preview</TableCell>
+                            <TableCell>Platform</TableCell>
+                            <TableCell>Author</TableCell>
+                            <TableCell>Post Time</TableCell>
+                            <TableCell>Related Projects</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -379,7 +377,7 @@ const PostSearch = () => {
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
-                    labelRowsPerPage="每页行数"
+                    labelRowsPerPage="Rows per page"
                 />
             </TableContainer>
             

@@ -10,14 +10,17 @@ import UserList from './pages/Users/UserList';
 import PostList from './pages/Posts/PostList';
 import ProjectList from './pages/Projects/ProjectList';
 import NavBar from './components/NavBar';
-import HomeIcon from '@mui/icons-material/Home';
 import SchoolIcon from '@mui/icons-material/School';
-import GroupIcon from '@mui/icons-material/Group';
-import ArticleIcon from '@mui/icons-material/Article';
+
 
 import PostSearch from './pages/Posts/PostSearch';
 import ProjectSearch from './pages/Projects/ProjectSearch';
-
+import ProjectPosts from './pages/Projects/ProjectPosts';
+import { 
+  Search as SearchIcon,
+  AccountTree as ProjectIcon,
+  Group as GroupIcon 
+} from '@mui/icons-material';
 function App() {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
@@ -33,7 +36,9 @@ function App() {
         <Route path="/projects" element={<ProjectList />} />
         <Route path="/postsearch" element={<PostSearch />} />
         <Route path="/projectsearch" element={<ProjectSearch />} />
-        <Route path="/" element={<PostSearch />} />
+        {/* <Route path="/" element={<PostSearch />} /> */}
+        <Route path="/projectposts" element={<ProjectPosts />} />
+        <Route path="/" element={<ProjectPosts />} />
         <Route path="/institutes/edit/:id" element={<InstituteForm mode="edit" />} />
         <Route path="/navbar" element={<NavBar />} />
       </Routes>
@@ -71,10 +76,10 @@ function App() {
           borderColor: 'divider'
         }}
       >
-        <BottomNavigationAction label="帖子搜索" icon={<HomeIcon />} />
-        <BottomNavigationAction label="项目搜索" icon={<HomeIcon />} />
-        <BottomNavigationAction label="研究所" icon={<SchoolIcon />} />
-        <BottomNavigationAction label="用户" icon={<GroupIcon />} />
+      <BottomNavigationAction label="Post Search" icon={<SearchIcon />} />
+        <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
+        <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
+        <BottomNavigationAction label="Users" icon={<GroupIcon />} />
         {/* <BottomNavigationAction label="文章" icon={<ArticleIcon />} /> */}
       </BottomNavigation>
     </Box>

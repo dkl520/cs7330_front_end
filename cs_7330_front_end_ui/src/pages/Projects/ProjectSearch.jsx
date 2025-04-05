@@ -28,13 +28,13 @@ const ProjectSearch = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    // 模拟数据
+    // Mock data
     const mockResults = [
         {
             project_id: 1,
-            name: "AI研究项目",
-            manager_first_name: "张",
-            manager_last_name: "三",
+            name: "AI Research Project",
+            manager_first_name: "Zhang",
+            manager_last_name: "San",
             institute_id: 1,
             start_date: "2024-01-01",
             end_date: "2024-12-31"
@@ -74,7 +74,7 @@ const ProjectSearch = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4">项目查询</Typography>
+                <Typography variant="h4">Project Search</Typography>
                 <Button
                     variant="outlined"
                     startIcon={
@@ -84,7 +84,7 @@ const ProjectSearch = () => {
                     }
                     onClick={() => setShowFilters(!showFilters)}
                 >
-                    {showFilters ? '收起筛选' : '展开筛选'}
+                    {showFilters ? 'Hide Filters' : 'Show Filters'}
                 </Button>
             </Box>
 
@@ -105,13 +105,13 @@ const ProjectSearch = () => {
 
                 }}>
                     <Stack spacing={3}>
-                        <Typography variant="h6">搜索条件</Typography>
+                        <Typography variant="h6">Search Criteria</Typography>
 
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
                             <TextField
                                 sx={{ width: '220px' }}
                                 size="small"
-                                label="项目ID"
+                                label="Project ID"
                                 type="number"
                                 value={filters.project_id}
                                 onChange={(e) => handleFilterChange('project_id', e.target.value)}
@@ -120,7 +120,7 @@ const ProjectSearch = () => {
                             <TextField
                                 sx={{ width: '220px' }}
                                 size="small"
-                                label="项目名称"
+                                label="Project Name"
                                 value={filters.name}
                                 onChange={(e) => handleFilterChange('name', e.target.value)}
                             />
@@ -128,7 +128,7 @@ const ProjectSearch = () => {
                             <TextField
                                 sx={{ width: '220px' }}
                                 size="small"
-                                label="项目经理姓"
+                                label="Manager First Name"
                                 value={filters.manager_first_name}
                                 onChange={(e) => handleFilterChange('manager_first_name', e.target.value)}
                             />
@@ -136,7 +136,7 @@ const ProjectSearch = () => {
                             <TextField
                                 sx={{ width: '220px' }}
                                 size="small"
-                                label="项目经理名"
+                                label="Manager Last Name"
                                 value={filters.manager_last_name}
                                 onChange={(e) => handleFilterChange('manager_last_name', e.target.value)}
                             />
@@ -144,7 +144,7 @@ const ProjectSearch = () => {
                             <TextField
                                 sx={{ width: '220px' }}
                                 size="small"
-                                label="研究所ID"
+                                label="Institute ID"
                                 type="number"
                                 value={filters.institute_id}
                                 onChange={(e) => handleFilterChange('institute_id', e.target.value)}
@@ -152,7 +152,7 @@ const ProjectSearch = () => {
 
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
-                                    label="开始日期"
+                                    label="Start Date"
                                     value={filters.start_date}
                                     onChange={(date) => handleFilterChange('start_date', date)}
                                     slotProps={{
@@ -166,7 +166,7 @@ const ProjectSearch = () => {
 
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
-                                    label="结束日期"
+                                    label="End Date"
                                     value={filters.end_date}
                                     onChange={(date) => handleFilterChange('end_date', date)}
                                     slotProps={{
@@ -185,14 +185,14 @@ const ProjectSearch = () => {
                                 startIcon={<ClearIcon />}
                                 onClick={handleClear}
                             >
-                                清除
+                                Clear
                             </Button>
                             <Button
                                 variant="contained"
                                 startIcon={<SearchIcon />}
                                 onClick={handleSearch}
                             >
-                                搜索
+                                Search
                             </Button>
                         </Stack>
                     </Stack>
@@ -203,11 +203,11 @@ const ProjectSearch = () => {
                 <Table aria-label="projects table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>项目ID</TableCell>
-                            <TableCell>项目名称</TableCell>
-                            <TableCell>项目经理</TableCell>
-                            <TableCell>研究所ID</TableCell>
-                            <TableCell>起止时间</TableCell>
+                            <TableCell>Project ID</TableCell>
+                            <TableCell>Project Name</TableCell>
+                            <TableCell>Project Manager</TableCell>
+                            <TableCell>Institute ID</TableCell>
+                            <TableCell>Duration</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -243,7 +243,7 @@ const ProjectSearch = () => {
                         setRowsPerPage(parseInt(event.target.value, 10));
                         setPage(0);
                     }}
-                    labelRowsPerPage="每页行数"
+                    labelRowsPerPage="Rows per page"
                 />
             </TableContainer>
         </Container>

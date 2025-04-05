@@ -24,12 +24,12 @@ import {
     DialogContentText
 } from '@mui/material';
 import {
-
     CalendarToday as CalendarIcon,
-    Person as PersonIcon
+    Person as PersonIcon,
+    Add as AddIcon,
+    Edit as EditIcon,
+    Delete as DeleteIcon
 } from '@mui/icons-material';
-
-
 
 import zhLocale from 'date-fns/locale/zh-CN';
 
@@ -37,9 +37,9 @@ const ProjectList = () => {
     const [projects, setProjects] = useState([
         {
             project_id: 1,
-            name: "AI研究项目",
-            manager_first_name: "张",
-            manager_last_name: "三",
+            name: "AI Research Project",
+            manager_first_name: "Zhang",
+            manager_last_name: "San",
             institute_id: 1,
             start_date: "2024-01-01",
             end_date: "2024-12-31"
@@ -65,56 +65,56 @@ const ProjectList = () => {
     const ProjectForm = () => (
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhLocale}>
             <Box component="form" sx={{ mt: 2 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                <Grid container spacing={2} >
+                    <Grid item xs={12} width={"100%"}>
                         <TextField
                             fullWidth
                             required
-                            label="项目名称"
+                            label="Project Name"
                             value={formData.name}
                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} width={"100%"} >
                         <TextField
                             fullWidth
                             required
-                            label="项目经理姓"
+                            label="Manager First Name"
                             value={formData.manager_first_name}
                             onChange={(e) => setFormData({ ...formData, manager_first_name: e.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} width={"100%"}>
                         <TextField
                             fullWidth
                             required
-                            label="项目经理名"
+                            label="Manager Last Name"
                             value={formData.manager_last_name}
                             onChange={(e) => setFormData({ ...formData, manager_last_name: e.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} >
                         <DatePicker
-                            label="开始日期"
+                            label="Start Date"
                             value={formData.start_date}
                             onChange={(date) => setFormData({ ...formData, start_date: date })}
                             renderInput={(params) => <TextField {...params} fullWidth />}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} >
                         <DatePicker
-                            label="结束日期"
+                            label="End Date"
                             value={formData.end_date}
                             onChange={(date) => setFormData({ ...formData, end_date: date })}
                             renderInput={(params) => <TextField {...params} fullWidth />}
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} width={"100%"}>
                         <TextField
                             fullWidth
                             required
                             type="number"
-                            label="研究所ID"
+                            label="Institute ID"
                             value={formData.institute_id}
                             onChange={(e) => setFormData({ ...formData, institute_id: e.target.value })}
                         />
@@ -129,10 +129,10 @@ const ProjectList = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Box>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        项目列表
+                        Project List
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
-                        管理和查看所有项目信息
+                        Manage and view all project information
                     </Typography>
                 </Box>
 
@@ -148,7 +148,7 @@ const ProjectList = () => {
                         '&:hover': { boxShadow: 4 }
                     }}
                 >
-                    添加项目
+                    Add Project
                 </Button>
             </Box>
 
@@ -202,7 +202,7 @@ const ProjectList = () => {
                                 <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
                                     <Chip
                                         icon={<PersonIcon />}
-                                        label={`项目经理: ${project.manager_first_name}${project.manager_last_name}`}
+                                        label={`Manager: ${project.manager_first_name} ${project.manager_last_name}`}
                                         size="small"
                                         sx={{ bgcolor: 'primary.lighter' }}
                                     />
@@ -214,20 +214,19 @@ const ProjectList = () => {
                                     />
                                 </Stack>
                             </Box>
-
                         </ListItem>
                     ))}
                 </List>
             </Paper>
 
-            {/* 添加项目对话框 */}
+            {/* Add Project Dialog */}
             <Dialog
                 open={addDialogOpen}
                 onClose={() => setAddDialogOpen(false)}
                 maxWidth="md"
                 fullWidth
             >
-                <DialogTitle>添加新项目</DialogTitle>
+                <DialogTitle>Add New Project</DialogTitle>
                 <DialogContent>
                     <ProjectForm />
                 </DialogContent>
@@ -236,70 +235,70 @@ const ProjectList = () => {
                         setAddDialogOpen(false);
                         setFormData(emptyProjectData);
                     }}>
-                        取消
+                        Cancel
                     </Button>
                     <Button
                         variant="contained"
                         onClick={() => {
-                            // TODO: 实现添加逻辑
+                            // TODO: Implement add logic
                             setAddDialogOpen(false);
                             setFormData(emptyProjectData);
                         }}
                     >
-                        添加
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑项目对话框 */}
+            {/* Edit Project Dialog */}
             <Dialog
                 open={editDialogOpen}
                 onClose={() => setEditDialogOpen(false)}
                 maxWidth="md"
                 fullWidth
             >
-                <DialogTitle>编辑项目</DialogTitle>
+                <DialogTitle>Edit Project</DialogTitle>
                 <DialogContent>
                     <ProjectForm />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setEditDialogOpen(false)}>
-                        取消
+                        Cancel
                     </Button>
                     <Button
                         variant="contained"
                         onClick={() => {
-                            // TODO: 实现保存逻辑
+                            // TODO: Implement save logic
                             setEditDialogOpen(false);
                         }}
                     >
-                        保存
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 删除确认对话框 */}
+            {/* Delete Confirmation Dialog */}
             <Dialog
                 open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
             >
-                <DialogTitle>确认删除</DialogTitle>
+                <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        确定要删除项目 "{currentProject?.name}" 吗？此操作无法撤销。
+                        Are you sure you want to delete project "{currentProject?.name}"? This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
                     <Button
                         color="error"
                         variant="contained"
                         onClick={() => {
-                            // TODO: 实现删除逻辑
+                            // TODO: Implement delete logic
                             setDeleteDialogOpen(false);
                         }}
                     >
-                        删除
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -308,28 +307,3 @@ const ProjectList = () => {
 };
 
 export default ProjectList;
-
-
-
-
-
-
-
-
-
-// const ProjectList = () => {
-//     const [value, setValue] = useState(null);
-
-//     return (
-//         <LocalizationProvider dateAdapter={AdapterDateFns}>
-//             <DatePicker
-//                 label="选择日期"
-//                 value={value}
-//                 onChange={(newValue) => setValue(newValue)}
-//                 slotProps={{ textField: { fullWidth: true } }}
-//             />
-//         </LocalizationProvider>
-//     );
-// };
-
-// export default ProjectList;

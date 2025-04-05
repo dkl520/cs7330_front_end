@@ -22,7 +22,8 @@ import {
   Select,
   MenuItem,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Grid
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -50,7 +51,7 @@ const UserList = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  
+
   const emptyUserData = {
     username: '',
     first_name: '',
@@ -72,114 +73,114 @@ const UserList = () => {
   };
 
   const handleAdd = () => {
-    // TODO: 实现添加逻辑
     setAddDialogOpen(false);
     setFormData(emptyUserData);
   };
 
   const handleSave = () => {
-    // TODO: 实现保存逻辑
     setEditDialogOpen(false);
   };
 
   const handleDelete = () => {
-    // TODO: 实现删除逻辑
     setDeleteDialogOpen(false);
   };
 
   const UserForm = ({ onSubmit, title }) => (
-    <Box component="form" sx={{ mt: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+    <Box component="form" sx={{ mt: 3 }}>
+      <Grid container spacing={2} >
+        <Grid item xs={12} width={"100%"}>
           <TextField
             fullWidth
             required
-            label="用户名"
+            label="Username"
             value={formData.username}
-            onChange={(e) => setFormData({...formData, username: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} width={"100%"}>
           <TextField
             fullWidth
             required
-            label="名"
+            label="First Name"
             value={formData.first_name}
-            onChange={(e) => setFormData({...formData, first_name: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}  width={"100%"}>
           <TextField
             fullWidth
             required
-            label="姓"
+            label="Last Name"
             value={formData.last_name}
-            onChange={(e) => setFormData({...formData, last_name: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} width={"100%"}>
           <TextField
             fullWidth
             type="number"
-            label="年龄"
+            label="Age"
             value={formData.age}
-            onChange={(e) => setFormData({...formData, age: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, age: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12 } width={"100%"}>
           <TextField
             fullWidth
-            label="出生国家"
+            label="Country of Birth"
             value={formData.country_of_birth}
-            onChange={(e) => setFormData({...formData, country_of_birth: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, country_of_birth: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} width={"100%"}>
           <TextField
             fullWidth
-            label="居住国家"
+            label="Country of Residence"
             value={formData.country_of_residence}
-            onChange={(e) => setFormData({...formData, country_of_residence: e.target.value})}
+            onChange={(e) => setFormData({ ...formData, country_of_residence: e.target.value })}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} width={"100%"}>
           <FormControl fullWidth>
-            <InputLabel>性别</InputLabel>
+            <InputLabel>Gender</InputLabel>
             <Select
               value={formData.gender}
-              label="性别"
-              onChange={(e) => setFormData({...formData, gender: e.target.value})}
+              label="Gender"
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
             >
-              <MenuItem value="male">男</MenuItem>
-              <MenuItem value="female">女</MenuItem>
-              <MenuItem value="other">其他</MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} width={"100%"}>
           <FormControlLabel
             control={
               <Switch
                 checked={formData.is_verified}
-                onChange={(e) => setFormData({...formData, is_verified: e.target.checked})}
+                onChange={(e) => setFormData({ ...formData, is_verified: e.target.checked })}
               />
             }
-            label="已验证"
+            label="Verified"
           />
         </Grid>
       </Grid>
     </Box>
   );
 
+
+
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <Box>
           <Typography variant="h4" component="h1" gutterBottom>
-            用户列表
+            User List
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            管理和查看所有用户信息
+            Manage and view all user information
           </Typography>
         </Box>
 
@@ -197,7 +198,7 @@ const UserList = () => {
             }
           }}
         >
-          添加用户
+          Add User
         </Button>
       </Box>
 
@@ -257,16 +258,16 @@ const UserList = () => {
                 secondary={
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      {user.first_name} {user.last_name} • {user.age}岁 • {user.gender === 'male' ? '男' : user.gender === 'female' ? '女' : '其他'}
+                      {user.first_name} {user.last_name} • {user.age} years • {user.gender === 'male' ? 'Male' : user.gender === 'female' ? 'Female' : 'Other'}
                     </Typography>
                     <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
                       <Chip
-                        label={`出生地: ${user.country_of_birth}`}
+                        label={`Birth: ${user.country_of_birth}`}
                         size="small"
                         sx={{ bgcolor: 'primary.lighter' }}
                       />
                       <Chip
-                        label={`居住地: ${user.country_of_residence}`}
+                        label={`Residence: ${user.country_of_residence}`}
                         size="small"
                         sx={{ bgcolor: 'secondary.lighter' }}
                       />
@@ -279,14 +280,13 @@ const UserList = () => {
         </List>
       </Paper>
 
-      {/* 添加用户对话框 */}
-      <Dialog 
-        open={addDialogOpen} 
+      <Dialog
+        open={addDialogOpen}
         onClose={() => setAddDialogOpen(false)}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>添加用户</DialogTitle>
+        <DialogTitle>Add User</DialogTitle>
         <DialogContent>
           <UserForm />
         </DialogContent>
@@ -295,50 +295,48 @@ const UserList = () => {
             setAddDialogOpen(false);
             setFormData(emptyUserData);
           }}>
-            取消
+            Cancel
           </Button>
           <Button onClick={handleAdd} variant="contained">
-            添加
+            Add
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* 编辑用户对话框 */}
-      <Dialog 
-        open={editDialogOpen} 
+      <Dialog
+        open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>编辑用户</DialogTitle>
+        <DialogTitle>Edit User</DialogTitle>
         <DialogContent>
           <UserForm />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setEditDialogOpen(false)}>
-            取消
+            Cancel
           </Button>
           <Button onClick={handleSave} variant="contained">
-            保存
+            Save
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* 删除确认对话框 */}
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
       >
-        <DialogTitle>确认删除</DialogTitle>
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            确定要删除用户 "{currentUser?.username}" 吗？此操作无法撤销。
+            Are you sure you want to delete user "{currentUser?.username}"? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            删除
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

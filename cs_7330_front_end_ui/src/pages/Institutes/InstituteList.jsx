@@ -9,8 +9,8 @@ import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/ico
 
 const InstituteList = () => {
     const navigate = useNavigate();
-    const [institutes] = useState([
-        { institute_id: 1, name: "清华大学人工智能研究院", description: "专注于AI前沿技术研究" }
+    const [institutes, setInstitutes] = useState([
+        { institute_id: 1, name: "Tsinghua University AI Research Institute", description: "Focusing on cutting-edge AI technology research" }
     ]);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -26,15 +26,41 @@ const InstituteList = () => {
         setEditDialogOpen(true);
     };
 
+    const handleEditSubmit = () => {
+        setInstitutes(institutes.map(institute => 
+            institute.institute_id === currentInstitute.institute_id
+                ? { ...institute, ...editFormData }
+                : institute
+        ));
+        setEditDialogOpen(false);
+    };
+
+    const handleDeleteConfirm = () => {
+        setInstitutes(institutes.filter(institute => 
+            institute.institute_id !== currentInstitute.institute_id
+        ));
+        setDeleteDialogOpen(false);
+    };
+
+    const handleAddSubmit = () => {
+        const newInstitute = {
+            institute_id: institutes.length + 1,
+            ...newInstituteData
+        };
+        setInstitutes([...institutes, newInstitute]);
+        setAddDialogOpen(false);
+        setNewInstituteData({ name: '', description: '' });
+    };
+
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                 <Box>
-                    <Typography variant="h4" gutterBottom>研究所列表</Typography>
-                    <Typography variant="subtitle1" color="text.secondary">管理和查看所有研究机构信息</Typography>
+                    <Typography variant="h4" gutterBottom>Institute List</Typography>
+                    <Typography variant="subtitle1" color="text.secondary">Manage and view all research institute information</Typography>
                 </Box>
                 <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddDialogOpen(true)}>
-                    添加研究所
+                    Add Institute
                 </Button>
             </Box>
 
@@ -75,6 +101,117 @@ const InstituteList = () => {
                     ))}
                 </List>
             </Paper>
+
+            {/* Add Institute Dialog */}
+            <Dialog 
+                open={addDialogOpen} 
+                onClose={() => setAddDialogOpen(false)}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>Add New Institute</DialogTitle>
+                <DialogContent>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        <TextField
+                            label="Institute Name"
+                            fullWidth
+                            value={newInstituteData.name}
+                            onChange={(e) => setNewInstituteData(prev => ({
+                                ...prev,
+                                name: e.target.value
+                            }))}
+                        />
+                        <TextField
+                            label="Institute Description"
+                            fullWidth
+                            multiline
+                            rows={4}
+                            value={newInstituteData.description}
+                            onChange={(e) => setNewInstituteData(prev => ({
+                                ...prev,
+                                description: e.target.value
+                            }))}
+                        />
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+                    <Button 
+                        variant="contained" 
+                        onClick={handleAddSubmit}
+                        disabled={!newInstituteData.name.trim()}
+                    >
+                        Confirm Add
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Edit Institute Dialog */}
+            <Dialog 
+                open={editDialogOpen} 
+                onClose={() => setEditDialogOpen(false)}
+                maxWidth="sm"
+                fullWidth
+            >
+                <DialogTitle>Edit Institute</DialogTitle>
+                <DialogContent>
+                    <Stack spacing={2} sx={{ mt: 2 }}>
+                        <TextField
+                            label="Institute Name"
+                            fullWidth
+                            value={editFormData.name}
+                            onChange={(e) => setEditFormData(prev => ({
+                                ...prev,
+                                name: e.target.value
+                            }))}
+                        />
+                        <TextField
+                            label="Institute Description"
+                            fullWidth
+                            multiline
+                            rows={4}
+                            value={editFormData.description}
+                            onChange={(e) => setEditFormData(prev => ({
+                                ...prev,
+                                description: e.target.value
+                            }))}
+                        />
+                    </Stack>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+                    <Button 
+                        variant="contained" 
+                        onClick={handleEditSubmit}
+                        disabled={!editFormData.name.trim()}
+                    >
+                        Save Changes
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={() => setDeleteDialogOpen(false)}
+            >
+                <DialogTitle>Confirm Deletion</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Are you sure you want to delete the institute "{currentInstitute?.name}"? This action cannot be undone.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+                    <Button 
+                        color="error" 
+                        variant="contained"
+                        onClick={handleDeleteConfirm}
+                    >
+                        Confirm Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };
