@@ -5,10 +5,9 @@ import AutoImport from 'unplugin-auto-import/vite';
 
 export default defineConfig({
   resolve: {
-    // alias: {
-    //   '@mui/styled-engine': path.resolve(__dirname, 'node_modules/@mui/styled-engine-sc'),
-    // },
+
   },
+  base: './', 
   plugins: [
     react(),
     AutoImport({
