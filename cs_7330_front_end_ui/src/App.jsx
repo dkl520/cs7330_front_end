@@ -39,6 +39,7 @@ function App() {
       <div className="relative z-10 pb-16">
         <Routes>
           <Route path="/postsearch" element={<PostSearch />} />
+          <Route path="/" element={<PostSearch />} />
           <Route path="/projectsearch" element={<ProjectSearch />} />
           <Route path="/institutes" element={<InstituteList />} />
           <Route path="/institutes/:id" element={<InstituteDetail />} />
