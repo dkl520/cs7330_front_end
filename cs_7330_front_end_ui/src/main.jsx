@@ -1,15 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'  // 修改这里的导入
 import './index.css'
 import App from './App.jsx'
-// import web-components.js
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>      {/* 修改这里的路由组件 */}
       <App />
-     
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 )
