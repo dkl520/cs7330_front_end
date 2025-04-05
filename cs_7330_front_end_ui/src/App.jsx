@@ -11,78 +11,83 @@ import PostList from './pages/Posts/PostList';
 import ProjectList from './pages/Projects/ProjectList';
 import NavBar from './components/NavBar';
 import SchoolIcon from '@mui/icons-material/School';
-
-
 import PostSearch from './pages/Posts/PostSearch';
 import ProjectSearch from './pages/Projects/ProjectSearch';
 import ProjectPosts from './pages/Projects/ProjectPosts';
-import { 
+import {
   Search as SearchIcon,
   AccountTree as ProjectIcon,
-  Group as GroupIcon 
+  Group as GroupIcon
 } from '@mui/icons-material';
+
 function App() {
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
-  return (
-    <Box sx={{ pb: 7 }}>  {/* 添加底部padding，为导航栏留出空间 */}
-      <Routes>
-        <Route path="/institutes" element={<InstituteList />} />
-        <Route path="/institutes/:id" element={<InstituteDetail />} />
-        <Route path="/institutes/detail" element={<InstituteDetail />} />
-        <Route path="/institutes/create" element={<InstituteForm mode="create" />} />
-        <Route path="/users" element={<UserList />} />
-        <Route path="/posts" element={<PostList />} />
-        <Route path="/projects" element={<ProjectList />} />
-        <Route path="/postsearch" element={<PostSearch />} />
-        <Route path="/projectsearch" element={<ProjectSearch />} />
-        {/* <Route path="/" element={<PostSearch />} /> */}
-        <Route path="/projectposts" element={<ProjectPosts />} />
-        <Route path="/" element={<ProjectPosts />} />
-        <Route path="/institutes/edit/:id" element={<InstituteForm mode="edit" />} />
-        <Route path="/navbar" element={<NavBar />} />
-      </Routes>
 
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-          // 根据选中的值进行导航
-          switch (newValue) {
-            case 0:
-              navigate('/postsearch');
-              break;
-            case 1:
-              navigate('/projectsearch');
-              break;
-            case 2:
-              navigate('/institutes');
-              break;
-            case 3:
-              navigate('/users');
-              // navigate('/posts');
-              break;
-            default:
-              break;
-          }
-        }}
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          borderTop: 1,
-          borderColor: 'divider'
-        }}
-      >
-      <BottomNavigationAction label="Post Search" icon={<SearchIcon />} />
-        <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
-        <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
-        <BottomNavigationAction label="Users" icon={<GroupIcon />} />
-        {/* <BottomNavigationAction label="文章" icon={<ArticleIcon />} /> */}
-      </BottomNavigation>
-    </Box>
+  return (
+    <div className="min-h-screen relative">
+      {/* 渐变背景 */}
+      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" />
+      
+      {/* 动态波浪效果 */}
+      <div className="fixed inset-0 opacity-30">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#4f46e510_25%,transparent_25%,transparent_75%,#4f46e510_75%,#4f46e510_100%)] bg-[length:60px_60px] animate-[gradient_3s_linear_infinite]" />
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,#4f46e510_25%,transparent_25%,transparent_75%,#4f46e510_75%,#4f46e510_100%)] bg-[length:60px_60px] animate-[gradient_3s_linear_infinite] rotate-45" />
+      </div>
+
+      {/* 主要内容 */}
+      <div className="relative z-10 pb-16">
+        <Routes>
+          <Route path="/postsearch" element={<PostSearch />} />
+          <Route path="/projectsearch" element={<ProjectSearch />} />
+          <Route path="/institutes" element={<InstituteList />} />
+          <Route path="/institutes/:id" element={<InstituteDetail />} />
+          <Route path="/institutes/new" element={<InstituteForm />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/posts" element={<PostList />} />
+          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/projects/:id/posts" element={<ProjectPosts />} />
+        </Routes>
+
+        <BottomNavigation
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+            switch (newValue) {
+              case 0:
+                navigate('/postsearch');
+                break;
+              case 1:
+                navigate('/projectsearch');
+                break;
+              case 2:
+                navigate('/institutes');
+                break;
+              case 3:
+                navigate('/users');
+                break;
+              default:
+                break;
+            }
+          }}
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            borderTop: 1,
+            borderColor: 'divider',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(8px)'
+          }}
+        >
+          <BottomNavigationAction label="搜索" icon={<SearchIcon />} />
+          <BottomNavigationAction label="项目" icon={<ProjectIcon />} />
+          <BottomNavigationAction label="机构" icon={<SchoolIcon />} />
+          <BottomNavigationAction label="用户" icon={<GroupIcon />} />
+        </BottomNavigation>
+      </div>
+    </div>
   );
 }
 
