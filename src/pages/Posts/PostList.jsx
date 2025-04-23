@@ -5,7 +5,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import zhLocale from 'date-fns/locale/zh-CN';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
-// import navigate from 'umi/navigate';
 import {
   Container,
   Typography,
@@ -25,7 +24,14 @@ import {
   DialogActions,
   TextField,
   Switch,
-  FormControlLabel
+  FormControlLabel,
+  Avatar,
+  Card,
+  CardContent,
+  Divider,
+  alpha,
+  useTheme,
+  CircularProgress
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -34,112 +40,141 @@ import {
   Image as ImageIcon,
   ThumbUp as LikeIcon,
   ThumbDown as DislikeIcon,
-  LocationOn as LocationIcon
+  LocationOn as LocationIcon,
+  AccessTime as TimeIcon,
+  Send as SendIcon,
+  Repeat as RepeatIcon
 } from '@mui/icons-material';
 
 // 表单组件：包含所有数据库字段，并使用 DateTimePicker 处理 DateTimeField
 const PostForm = ({ formData, setFormData }) => {
+  const theme = useTheme();
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhLocale}>
-      <Stack spacing={2} sx={{ mt: 2 }}>
-        {/* post_id 只读 */}
-        {/* <TextField
-          fullWidth
-          label="Post ID"
-          value={formData.post_id || ''}
-          InputProps={{ readOnly: true }}
-        /> */}
-
+      <Stack spacing={3} sx={{ mt: 2 }}>
         <TextField
           fullWidth
           required
           multiline
           rows={4}
-          label="内容"
+          label="Content"
+          variant="outlined"
           value={formData.content}
           onChange={e => setFormData({ ...formData, content: e.target.value })}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: 2,
+              '&.Mui-focused fieldset': {
+                borderColor: theme.palette.primary.main,
+                borderWidth: 2
+              }
+            }
+          }}
         />
 
-        {/* <TextField
-          fullWidth
-          label="User ID"
-          type="number"
-          value={formData.user_id}
-          onChange={e => setFormData({ ...formData, user_id: Number(e.target.value) })}
-        /> */}
+        <Box sx={{ bgcolor: alpha(theme.palette.background.default, 0.7), p: 2, borderRadius: 2 }}>
+          <Typography variant="subtitle2" sx={{ mb: 2, color: theme.palette.text.secondary }}>
+            Post Data
+          </Typography>
 
-        {/* <TextField
-          fullWidth
-          label="Media ID"
-          type="number"
-          value={formData.media_id}
-          onChange={e => setFormData({ ...formData, media_id: Number(e.target.value) })}
-        /> */}
-
-        <TextField
-          fullWidth
-          label="Likes"
-          type="number"
-          value={formData.likes}
-          onChange={e => setFormData({ ...formData, likes: Number(e.target.value) })}
-        />
-
-        <TextField
-          fullWidth
-          label="Dislikes"
-          type="number"
-          value={formData.dislikes}
-          onChange={e => setFormData({ ...formData, dislikes: Number(e.target.value) })}
-        />
-
-        <DateTimePicker
-          label="发布时间"
-          value={formData.post_time ? new Date(formData.post_time) : null}
-          onChange={date =>
-            setFormData({
-              ...formData,
-              post_time: date ? date.toISOString() : ''
-            })
-          }
-          renderInput={params => <TextField {...params} fullWidth required />}
-        />
-
-        <TextField
-          fullWidth
-          label="城市"
-          value={formData.location_city}
-          onChange={e => setFormData({ ...formData, location_city: e.target.value })}
-        />
-
-        <TextField
-          fullWidth
-          label="省/州"
-          value={formData.location_state}
-          onChange={e => setFormData({ ...formData, location_state: e.target.value })}
-        />
-
-        <TextField
-          fullWidth
-          label="国家"
-          value={formData.location_country}
-          onChange={e => setFormData({ ...formData, location_country: e.target.value })}
-        />
-
-        <FormControlLabel
-          control={
-            <Switch
-              checked={formData.has_multimedia}
-              onChange={e => setFormData({ ...formData, has_multimedia: e.target.checked })}
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              label="Likes"
+              type="number"
+              size="small"
+              value={formData.likes}
+              onChange={e => setFormData({ ...formData, likes: Number(e.target.value) })}
+              InputProps={{
+                startAdornment: <LikeIcon fontSize="small" color="primary" sx={{ mr: 1 }} />
+              }}
             />
-          }
-          label="包含多媒体"
-        />
+
+            <TextField
+              fullWidth
+              label="Dislikes"
+              type="number"
+              size="small"
+              value={formData.dislikes}
+              onChange={e => setFormData({ ...formData, dislikes: Number(e.target.value) })}
+              InputProps={{
+                startAdornment: <DislikeIcon fontSize="small" color="error" sx={{ mr: 1 }} />
+              }}
+            />
+          </Stack>
+
+          <DateTimePicker
+            label="Post Time"
+            value={formData.post_time ? new Date(formData.post_time) : null}
+            onChange={date =>
+              setFormData({
+                ...formData,
+                post_time: date ? date.toISOString() : ''
+              })
+            }
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                required: true,
+                size: "small",
+                sx: { mb: 2 }
+              }
+            }}
+          />
+
+          <Typography variant="subtitle2" sx={{ mb: 2, mt: 2, color: theme.palette.text.secondary }}>
+            Location Info
+          </Typography>
+
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              label="City"
+              size="small"
+              value={formData.location_city}
+              onChange={e => setFormData({ ...formData, location_city: e.target.value })}
+            />
+
+            <TextField
+              fullWidth
+              label="State/Province"
+              size="small"
+              value={formData.location_state}
+              onChange={e => setFormData({ ...formData, location_state: e.target.value })}
+            />
+          </Stack>
+
+          <TextField
+            fullWidth
+            label="Country"
+            size="small"
+            value={formData.location_country}
+            onChange={e => setFormData({ ...formData, location_country: e.target.value })}
+            sx={{ mb: 2 }}
+          />
+
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData.has_multimedia}
+                onChange={e => setFormData({ ...formData, has_multimedia: e.target.checked })}
+                color="primary"
+              />
+            }
+            label={
+              <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
+                <ImageIcon fontSize="small" sx={{ mr: 0.5 }} />
+                Contains Multimedia
+              </Typography>
+            }
+          />
+        </Box>
       </Stack>
     </LocalizationProvider>
   );
 };
 
-// 主组件 PostList 保持不变，引用已更新的 PostForm
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
@@ -152,6 +187,8 @@ const PostList = () => {
   const [searchParams] = useSearchParams();
   const userId = searchParams.get('user_id');
   const mediaId = searchParams.get('media_id');
+  const theme = useTheme();
+  
   const emptyPostData = {
     post_id: '',
     content: '',
@@ -222,171 +259,348 @@ const PostList = () => {
       console.error('删除帖子失败:', error);
     }
   };
+  
+  const getRandomColor = (id) => {
+    const colors = [
+      theme.palette.primary.main,
+      theme.palette.secondary.main,
+      theme.palette.success.main,
+      theme.palette.info.main,
+      theme.palette.warning.main,
+    ];
+    return colors[id % colors.length];
+  };
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        mb: 4,
+        pb: 3,
+        borderBottom: `1px solid ${theme.palette.divider}`
+      }}>
         <Box>
-          <Typography variant="h4" component="h1" gutterBottom>
-            帖子列表
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 700 }}>
+            POSTS
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            管理和查看所有帖子
+              user posts
           </Typography>
         </Box>
 
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setAddDialogOpen(true)}
-        >
-          发布帖子
-        </Button>
-
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => navigate(`/reposts?user_id=${userId}&media_id=${mediaId}`)}
-        >
-          转发帖子
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="contained"
+            startIcon={<RepeatIcon />}
+            onClick={() => navigate(`/reposts?user_id=${userId}&media_id=${mediaId}`)}
+            sx={{ 
+              borderRadius: 2,
+              bgcolor: theme.palette.secondary.main,
+              '&:hover': {
+                bgcolor: theme.palette.secondary.dark,
+              }
+            }}
+          >
+            Repost
+          </Button>
+          
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setAddDialogOpen(true)}
+            sx={{ 
+              borderRadius: 2,
+              boxShadow: theme.shadows[2],
+              '&:hover': {
+                boxShadow: theme.shadows[4],
+              }
+            }}
+          >
+            Publish Post
+          </Button>
+        </Stack>
       </Box>
 
-      <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}>
-        <List sx={{ p: 0 }}>
-          {loading ? (
-            <ListItem>
-              <Typography component="div">加载中...</Typography>
-            </ListItem>
-          ) : posts.length === 0 ? (
-            <ListItem>
-              <Typography component="div">暂无帖子数据</Typography>
-            </ListItem>
-          ) : (
-            posts.map((post, index) => (
-              <ListItem
-                key={post.post_id}
-                sx={{
-                  p: 3,
-                  borderBottom: index < posts.length - 1 ? 1 : 0,
-                  borderColor: 'divider',
-                  '&:hover': { bgcolor: 'action.hover' }
-                }}
-                secondaryAction={
-                  <Stack direction="row" spacing={1}>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 6 }}>
+          <CircularProgress />
+        </Box>
+      ) : posts.length === 0 ? (
+        <Paper 
+          elevation={0} 
+          sx={{ 
+            p: 6, 
+            borderRadius: 3, 
+            textAlign: 'center',
+            bgcolor: alpha(theme.palette.primary.light, 0.1),
+            border: `1px dashed ${theme.palette.primary.main}`
+          }}
+        >
+          <Typography variant="h6" color="text.secondary" gutterBottom>
+            暂无帖子数据
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            点击"Publish Post"按钮创建新帖子
+          </Typography>
+        </Paper>
+      ) : (
+        <Stack spacing={3}>
+          {posts.map((post) => (
+            <Card 
+              key={post.post_id} 
+              elevation={2}
+              sx={{ 
+                borderRadius: 3, 
+                overflow: 'hidden',
+                transition: 'all 0.3s',
+                '&:hover': { 
+                  transform: 'translateY(-4px)',
+                  boxShadow: theme.shadows[8]
+                }
+              }}
+            >
+              <CardContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                  <Avatar 
+                    sx={{ 
+                      bgcolor: getRandomColor(post.user_id),
+                      width: 48,
+                      height: 48
+                    }}
+                  >
+                    {post.user_id?.toString().charAt(0) || 'U'}
+                  </Avatar>
+                  
+                  <Box sx={{ flex: 1 }}>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        mb: 2, 
+                        fontSize: '1.1rem',
+                        whiteSpace: 'pre-line' 
+                      }}
+                    >
+                      {post.content}
+                    </Typography>
+                    
+                    <Stack 
+                      direction="row" 
+                      spacing={3} 
+                      sx={{ 
+                        flexWrap: 'wrap', 
+                        alignItems: 'center',
+                        mb: 2
+                      }}
+                    >
+                      <Stack direction="row" spacing={0.5} alignItems="center">
+                        <LikeIcon fontSize="small" color="primary" />
+                        <Typography component="span" variant="body2">
+                          {post.likes}
+                        </Typography>
+                      </Stack>
+                      
+                      <Stack direction="row" spacing={0.5} alignItems="center">
+                        <DislikeIcon fontSize="small" color="error" />
+                        <Typography component="span" variant="body2">
+                          {post.dislikes}
+                        </Typography>
+                      </Stack>
+                      
+                      {post.has_multimedia && (
+                        <Chip 
+                          icon={<ImageIcon fontSize="small" />} 
+                          label="多媒体" 
+                          size="small"
+                          sx={{ bgcolor: alpha(theme.palette.info.main, 0.1), color: theme.palette.info.main }}
+                        />
+                      )}
+                    </Stack>
+                    
+                    <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+                      <Chip
+                        icon={<LocationIcon fontSize="small" />}
+                        label={`${post.location_city || '未知'}, ${post.location_state || '未知'}, ${post.location_country || '未知'}`}
+                        size="small"
+                        sx={{ 
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          color: theme.palette.primary.main,
+                          '& .MuiChip-icon': {
+                            color: theme.palette.primary.main
+                          }
+                        }}
+                      />
+                      
+                      <Chip
+                        icon={<TimeIcon fontSize="small" />}
+                        label={new Date(post.post_time).toLocaleString()}
+                        size="small"
+                        sx={{ 
+                          bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                          color: theme.palette.secondary.main,
+                          '& .MuiChip-icon': {
+                            color: theme.palette.secondary.main
+                          }
+                        }}
+                      />
+                    </Stack>
+                  </Box>
+                  
+                  <Stack direction="column" spacing={1}>
                     <IconButton
-                      onClick={e => {
-                        e.stopPropagation();
+                      onClick={() => {
                         setCurrentPost(post);
                         setFormData(post);
                         setEditDialogOpen(true);
                       }}
-                      sx={{ color: 'primary.main', '&:hover': { bgcolor: 'primary.lighter' } }}
+                      sx={{ 
+                        color: theme.palette.primary.main,
+                        bgcolor: alpha(theme.palette.primary.main, 0.1),
+                        '&:hover': { 
+                          bgcolor: alpha(theme.palette.primary.main, 0.2) 
+                        }
+                      }}
+                      size="small"
                     >
-                      <EditIcon />
+                      <EditIcon fontSize="small" />
                     </IconButton>
+                    
                     <IconButton
-                      onClick={e => {
-                        e.stopPropagation();
+                      onClick={() => {
                         setCurrentPost(post);
                         setDeleteDialogOpen(true);
                       }}
-                      sx={{ color: 'error.main', '&:hover': { bgcolor: 'error.lighter' } }}
+                      sx={{ 
+                        color: theme.palette.error.main,
+                        bgcolor: alpha(theme.palette.error.main, 0.1),
+                        '&:hover': { 
+                          bgcolor: alpha(theme.palette.error.main, 0.2) 
+                        }
+                      }}
+                      size="small"
                     >
-                      <DeleteIcon />
+                      <DeleteIcon fontSize="small" />
                     </IconButton>
                   </Stack>
-                }
-              >
-                <ListItemText
-                  primary={
-                    <Box sx={{ mb: 1 }}>
-                      <Typography component="div" variant="body1">
-                        {post.content}
-                      </Typography>
-                    </Box>
-                  }
-                  secondary={
-                    <Stack spacing={1}>
-                      <Stack direction="row" spacing={2} alignItems="center">
-                        <Stack direction="row" spacing={0.5} alignItems="center">
-                          <LikeIcon fontSize="small" color="primary" />
-                          <Typography component="span" variant="body2">{post.likes}</Typography>
-                        </Stack>
-                        <Stack direction="row" spacing={0.5} alignItems="center">
-                          <DislikeIcon fontSize="small" color="error" />
-                          <Typography component="span" variant="body2">{post.dislikes}</Typography>
-                        </Stack>
-                        {post.has_multimedia && <ImageIcon fontSize="small" color="primary" />}
-                      </Stack>
-                      <Stack direction="row" spacing={1}>
-                        <Chip
-                          icon={<LocationIcon />}
-                          label={`${post.location_city}, ${post.location_state}, ${post.location_country}`}
-                          size="small"
-                          sx={{ bgcolor: 'primary.lighter' }}
-                        />
-                        <Chip
-                          label={new Date(post.post_time).toLocaleString()}
-                          size="small"
-                          sx={{ bgcolor: 'secondary.lighter' }}
-                        />
-                      </Stack>
-                    </Stack>
-                  }
-                  secondaryTypographyProps={{ component: 'div' }}
-                />
-              </ListItem>
-            ))
-          )}
-        </List>
-      </Paper>
+                </Box>
+              </CardContent>
+            </Card>
+          ))}
+        </Stack>
+      )}
 
       {/* 添加帖子对话框 */}
-      <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle component="div">发布新帖子</DialogTitle>
-        <DialogContent>
+      <Dialog 
+        open={addDialogOpen} 
+        onClose={() => setAddDialogOpen(false)} 
+        fullWidth 
+        maxWidth="md"
+        PaperProps={{
+          sx: { borderRadius: 3 }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
+            NEW POST
+          </Typography>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ pt: 3 }}>
           <PostForm formData={formData} setFormData={setFormData} />
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button
             onClick={() => {
               setAddDialogOpen(false);
               setFormData(emptyPostData);
             }}
+            sx={{ borderRadius: 2 }}
           >
-            取消
+            Cancel
           </Button>
-          <Button variant="contained" onClick={handleAdd}>
-            发布
+          <Button 
+            variant="contained" 
+            onClick={handleAdd}
+            startIcon={<SendIcon />}
+            sx={{ borderRadius: 2 }}
+          >
+            Publish
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* 编辑帖子对话框 */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle component="div">编辑帖子</DialogTitle>
-        <DialogContent>
+      <Dialog 
+        open={editDialogOpen} 
+        onClose={() => setEditDialogOpen(false)} 
+        fullWidth 
+        maxWidth="md"
+        PaperProps={{
+          sx: { borderRadius: 3 }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 600 }}>
+            Edit post
+          </Typography>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ pt: 3 }}>
           <PostForm formData={formData} setFormData={setFormData} />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setEditDialogOpen(false)}>取消</Button>
-          <Button variant="contained" onClick={handleEdit}>
-            保存
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button 
+            onClick={() => setEditDialogOpen(false)}
+            sx={{ borderRadius: 2 }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="contained" 
+            onClick={handleEdit}
+            startIcon={<EditIcon />}
+            sx={{ borderRadius: 2 }}
+          >
+            Save
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* 删除确认对话框 */}
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle component="div">确认删除</DialogTitle>
-        <DialogContent>
-          <DialogContentText>确定要删除这条帖子吗？此操作无法撤销。</DialogContentText>
+      <Dialog 
+        open={deleteDialogOpen} 
+        onClose={() => setDeleteDialogOpen(false)}
+        PaperProps={{
+          sx: { borderRadius: 3 }
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: theme.palette.error.main }}>
+            确认删除
+          </Typography>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ pt: 3 }}>
+          <DialogContentText>
+            确定要删除这条帖子吗？此操作无法撤销。
+          </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
-          <Button color="error" variant="contained" onClick={handleDelete}>
-            删除
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button 
+            onClick={() => setDeleteDialogOpen(false)}
+            sx={{ borderRadius: 2 }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            color="error" 
+            variant="contained" 
+            onClick={handleDelete}
+            startIcon={<DeleteIcon />}
+            sx={{ borderRadius: 2 }}
+          >
+            delete
           </Button>
         </DialogActions>
       </Dialog>

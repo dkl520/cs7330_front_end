@@ -18,14 +18,14 @@ const InstituteList = () => {
     const [newInstituteData, setNewInstituteData] = useState({ name: '', description: '' });
     const [loading, setLoading] = useState(false);
 
-    // 获取研究所列表
+    // Fetch institute list
     const fetchInstitutes = async () => {
         try {
             setLoading(true);
             const response = await window.$api.institute.list();
             setInstitutes(response || []);
         } catch (error) {
-            console.error('获取研究所列表失败:', error);
+            console.error('Failed to fetch institutes:', error);
         } finally {
             setLoading(false);
         }
@@ -48,7 +48,7 @@ const InstituteList = () => {
             await fetchInstitutes();
             setEditDialogOpen(false);
         } catch (error) {
-            console.error('更新研究所失败:', error);
+            console.error('Failed to update institute:', error);
         }
     };
 
@@ -58,7 +58,7 @@ const InstituteList = () => {
             await fetchInstitutes();
             setDeleteDialogOpen(false);
         } catch (error) {
-            console.error('删除研究所失败:', error);
+            console.error('Failed to delete institute:', error);
         }
     };
 
@@ -69,62 +69,140 @@ const InstituteList = () => {
             setAddDialogOpen(false);
             setNewInstituteData({ name: '', description: '' });
         } catch (error) {
-            console.error('创建研究所失败:', error);
+            console.error('Failed to create institute:', error);
         }
     };
 
     return (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Container maxWidth="lg" sx={{ py: 5 }}>
+            <Box 
+                display="flex" 
+                justifyContent="space-between" 
+                alignItems="center" 
+                mb={4}
+                sx={{
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    gap: { xs: 2, sm: 0 },
+                    alignItems: { xs: 'flex-start', sm: 'center' }
+                }}
+            >
                 <Box>
-                    <Typography variant="h4" gutterBottom>研究所列表</Typography>
-                    <Typography variant="subtitle1" color="text.secondary">管理和查看所有研究所信息</Typography>
+                    <Typography 
+                        variant="h4" 
+                        gutterBottom 
+                        sx={{ 
+                            fontWeight: 600,
+                            color: 'primary.main'
+                        }}
+                    >
+                        Institute List
+                    </Typography>
+                    <Typography 
+                        variant="subtitle1" 
+                        color="text.secondary"
+                        sx={{ fontSize: '1.1rem' }}
+                    >
+                        Manage and view all institute information
+                    </Typography>
                 </Box>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddDialogOpen(true)}>
-                    添加研究所
+                <Button 
+                    variant="contained" 
+                    startIcon={<AddIcon />} 
+                    onClick={() => setAddDialogOpen(true)}
+                    sx={{ 
+                        borderRadius: 2,
+                        px: 3,
+                        py: 1,
+                        boxShadow: 3,
+                        textTransform: 'none',
+                        fontSize: '1rem'
+                    }}
+                >
+                    Add Institute
                 </Button>
             </Box>
 
-            <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}>
-                <List>
+            <Paper 
+                elevation={3} 
+                sx={{ 
+                    borderRadius: 4,
+                    overflow: 'auto',
+                    maxHeight: 'calc(100vh - 250px)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                }}
+            >
+                <List sx={{ p: 0 }}>
                     {loading ? (
-                        <ListItem>
-                            <Typography>加载中...</Typography>
+                        <ListItem sx={{ py: 4, justifyContent: 'center' }}>
+                            <Typography>Loading...</Typography>
                         </ListItem>
                     ) : institutes.length === 0 ? (
-                        <ListItem>
-                            <Typography>暂无研究所数据</Typography>
+                        <ListItem sx={{ py: 6, justifyContent: 'center' }}>
+                            <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                                No institutes available
+                            </Typography>
                         </ListItem>
                     ) : (
-                        institutes.map((institute) => (
+                        institutes.map((institute, index) => (
                             <ListItem
                                 key={institute.institute_id}
-                                sx={{ p: 3, cursor: 'pointer', '&:hover': { bgcolor: 'action.hover' } }}
+                                sx={{ 
+                                    p: 3,
+                                    cursor: 'pointer',
+                                    '&:hover': { bgcolor: 'action.hover' },
+                                    borderBottom: index < institutes.length - 1 ? '1px solid #f0f0f0' : 'none'
+                                }}
                                 onClick={() => navigate(`/projects/${institute.institute_id}`)}
                                 secondaryAction={
                                     <Stack direction="row" spacing={1}>
-                                        <IconButton onClick={(e) => handleEditClick(institute, e)}><EditIcon /></IconButton>
-                                        <IconButton onClick={(e) => { e.stopPropagation(); setCurrentInstitute(institute); setDeleteDialogOpen(true); }}>
-                                            <DeleteIcon color="error" />
+                                        <IconButton 
+                                            onClick={(e) => handleEditClick(institute, e)}
+                                            sx={{ 
+                                                color: 'primary.main',
+                                                '&:hover': { bgcolor: 'primary.lighter' } 
+                                            }}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton 
+                                            onClick={(e) => { 
+                                                e.stopPropagation(); 
+                                                setCurrentInstitute(institute); 
+                                                setDeleteDialogOpen(true); 
+                                            }}
+                                            sx={{ 
+                                                color: 'error.main',
+                                                '&:hover': { bgcolor: 'error.lighter' } 
+                                            }}
+                                        >
+                                            <DeleteIcon />
                                         </IconButton>
                                     </Stack>
                                 }
                             >
                                 <Box sx={{ width: '100%' }}>
-                                    <Typography variant="h6" gutterBottom>
+                                    <Typography 
+                                        variant="h6" 
+                                        gutterBottom
+                                        sx={{ fontWeight: 500 }}
+                                    >
                                         {institute.name}
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         color="text.secondary"
-                                        sx={{ mb: 2 }}
+                                        sx={{ mb: 2, lineHeight: 1.6 }}
                                     >
                                         {institute.description}
                                     </Typography>
                                     <Chip
                                         label={`ID: ${institute.institute_id}`}
                                         size="small"
-                                        sx={{ bgcolor: 'grey.100' }}
+                                        sx={{ 
+                                            bgcolor: 'primary.lighter',
+                                            color: 'primary.dark',
+                                            fontWeight: 500
+                                        }}
                                     />
                                 </Box>
                             </ListItem>
@@ -133,27 +211,35 @@ const InstituteList = () => {
                 </List>
             </Paper>
 
-            {/* 添加研究所对话框 */}
+            {/* Add Institute Dialog */}
             <Dialog 
                 open={addDialogOpen} 
                 onClose={() => setAddDialogOpen(false)}
                 maxWidth="sm"
                 fullWidth
+                PaperProps={{
+                    sx: { borderRadius: 3 }
+                }}
             >
-                <DialogTitle>添加新研究所</DialogTitle>
-                <DialogContent>
-                    <Stack spacing={2} sx={{ mt: 2 }}>
+                <DialogTitle sx={{ pb: 1, pt: 3, px: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Add New Institute
+                    </Typography>
+                </DialogTitle>
+                <DialogContent sx={{ px: 3 }}>
+                    <Stack spacing={3} sx={{ mt: 2 }}>
                         <TextField
-                            label="研究所名称"
+                            label="Institute Name"
                             fullWidth
                             value={newInstituteData.name}
                             onChange={(e) => setNewInstituteData(prev => ({
                                 ...prev,
                                 name: e.target.value
                             }))}
+                            variant="outlined"
                         />
                         {/* <TextField
-                            label="研究所描述"
+                            label="Institute Description"
                             fullWidth
                             multiline
                             rows={4}
@@ -162,42 +248,65 @@ const InstituteList = () => {
                                 ...prev,
                                 description: e.target.value
                             }))}
+                            variant="outlined"
                         /> */}
                     </Stack>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
+                <DialogActions sx={{ px: 3, py: 3 }}>
+                    <Button 
+                        onClick={() => setAddDialogOpen(false)}
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500
+                        }}
+                    >
+                        Cancel
+                    </Button>
                     <Button 
                         variant="contained" 
                         onClick={handleAddSubmit}
                         disabled={!newInstituteData.name.trim()}
+                        sx={{ 
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            px: 3,
+                            fontWeight: 500
+                        }}
                     >
-                        确认添加
+                        Confirm
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑研究所对话框 */}
+            {/* Edit Institute Dialog */}
             <Dialog 
                 open={editDialogOpen} 
                 onClose={() => setEditDialogOpen(false)}
                 maxWidth="sm"
                 fullWidth
+                PaperProps={{
+                    sx: { borderRadius: 3 }
+                }}
             >
-                <DialogTitle>编辑研究所</DialogTitle>
-                <DialogContent>
-                    <Stack spacing={2} sx={{ mt: 2 }}>
+                <DialogTitle sx={{ pb: 1, pt: 3, px: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Edit Institute
+                    </Typography>
+                </DialogTitle>
+                <DialogContent sx={{ px: 3 }}>
+                    <Stack spacing={3} sx={{ mt: 2 }}>
                         <TextField
-                            label="研究所名称"
+                            label="Institute Name"
                             fullWidth
                             value={editFormData.name}
                             onChange={(e) => setEditFormData(prev => ({
                                 ...prev,
                                 name: e.target.value
                             }))}
+                            variant="outlined"
                         />
                         {/* <TextField
-                            label="研究所描述"
+                            label="Institute Description"
                             fullWidth
                             multiline
                             rows={4}
@@ -206,40 +315,76 @@ const InstituteList = () => {
                                 ...prev,
                                 description: e.target.value
                             }))}
+                            variant="outlined"
                         /> */}
                     </Stack>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setEditDialogOpen(false)}>取消</Button>
+                <DialogActions sx={{ px: 3, py: 3 }}>
+                    <Button 
+                        onClick={() => setEditDialogOpen(false)}
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500
+                        }}
+                    >
+                        Cancel
+                    </Button>
                     <Button 
                         variant="contained" 
                         onClick={handleEditSubmit}
                         disabled={!editFormData.name.trim()}
+                        sx={{ 
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            px: 3,
+                            fontWeight: 500
+                        }}
                     >
-                        保存更改
+                        Save Changes
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 删除确认对话框 */}
+            {/* Delete Confirmation Dialog */}
             <Dialog
                 open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
+                PaperProps={{
+                    sx: { borderRadius: 3 }
+                }}
             >
-                <DialogTitle>确认删除</DialogTitle>
-                <DialogContent>
-                    <Typography>
-                        确定要删除研究所 "{currentInstitute?.name}" 吗？此操作无法撤销。
+                <DialogTitle sx={{ pb: 1, pt: 3, px: 3 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                        Confirm Deletion
+                    </Typography>
+                </DialogTitle>
+                <DialogContent sx={{ px: 3 }}>
+                    <Typography sx={{ mt: 1 }}>
+                        Are you sure you want to delete the institute "{currentInstitute?.name}"? This action cannot be undone.
                     </Typography>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+                <DialogActions sx={{ px: 3, py: 3 }}>
+                    <Button 
+                        onClick={() => setDeleteDialogOpen(false)}
+                        sx={{ 
+                            textTransform: 'none',
+                            fontWeight: 500
+                        }}
+                    >
+                        Cancel
+                    </Button>
                     <Button 
                         color="error" 
                         variant="contained"
                         onClick={handleDeleteConfirm}
+                        sx={{ 
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            px: 3,
+                            fontWeight: 500
+                        }}
                     >
-                        确认删除
+                        Confirm Delete
                     </Button>
                 </DialogActions>
             </Dialog>
