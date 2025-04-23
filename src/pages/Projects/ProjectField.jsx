@@ -1,12 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-// import { useSearchParams } from 'react-router-dom';
 import {
     Container, Box, Typography, Button, Paper, List, ListItem,
     ListItemText, IconButton, Dialog, DialogTitle, DialogContent,
-    DialogActions, TextField, Stack
+    DialogActions, TextField, Stack, Chip, Avatar
 } from '@mui/material';
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+
+// Field form component
+const FieldForm = ({ formData, setFormData }) => (
+    <Stack spacing={2} sx={{ mt: 2 }}>
+        <TextField
+            fullWidth
+            type="text"
+            label="Field Name"
+            required
+            variant="outlined"
+            value={formData.field_name}
+            onChange={e => setFormData({ ...formData, field_name: e.target.value })}
+            sx={{
+                '& .MuiOutlinedInput-root': {
+                    borderRadius: 2
+                }
+            }}
+        />
+    </Stack>
+);
 
 const ProjectField = () => {
     const { id: project_id } = useParams();
@@ -16,7 +35,7 @@ const ProjectField = () => {
     const [currentField, setCurrentField] = useState(null);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    // const { id } = useParams();
+
     const emptyFieldData = {
         field_id: '',
         field_name: '',
@@ -28,10 +47,10 @@ const ProjectField = () => {
     const fetchFields = async () => {
         try {
             setLoading(true);
-            const response = await window.$api.projectField.list({ project_id });
+            const response = await window.$api.projectField.list(project_id);
             setFields(response || []);
         } catch (error) {
-            console.error('获取字段列表失败:', error);
+            console.error('Failed to fetch field list:', error);
             setFields([]);
         } finally {
             setLoading(false);
@@ -49,7 +68,7 @@ const ProjectField = () => {
             setFormData(emptyFieldData);
             await fetchFields();
         } catch (error) {
-            console.error('创建字段失败:', error);
+            console.error('Failed to create field:', error);
         }
     };
 
@@ -61,7 +80,7 @@ const ProjectField = () => {
             setFormData(emptyFieldData);
             await fetchFields();
         } catch (error) {
-            console.error('更新字段失败:', error);
+            console.error('Failed to update field:', error);
         }
     };
 
@@ -72,127 +91,168 @@ const ProjectField = () => {
             setCurrentField(null);
             await fetchFields();
         } catch (error) {
-            console.error('删除字段失败:', error);
+            console.error('Failed to delete field:', error);
         }
     };
 
-    // 字段表单组件
-    const FieldForm = ({ formData, setFormData }) => (
-        <Stack spacing={2} sx={{ mt: 2 }}>
-            {/* <TextField
-                fullWidth
-                required
-                label="字段ID"
-                value={formData.field_id}
-                onChange={e => setFormData({ ...formData, field_id: e.target.value })}
-            /> */}
-            <TextField
-                fullWidth
-                required
-                label="字段名称"
-                value={formData.field_name}
-                onChange={e => setFormData({ ...formData, field_name: e.target.value })}
-            />
-        </Stack>
-    );
-
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Box>
-                    <Typography variant="h4" component="h1" gutterBottom>
-                        项目字段列表
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
-                        管理和查看项目的分析字段
-                    </Typography>
+            <Paper
+                elevation={0}
+                sx={{
+                    p: 3,
+                    mb: 4,
+                    borderRadius: 2,
+                    background: (theme) => theme.palette.grey[50]
+                }}
+            >
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center'
+                }}>
+                    <Box>
+                        <Typography variant="h4" fontWeight="500" gutterBottom>
+                            Project Fields
+                        </Typography>
+                        <Typography variant="subtitle1" color="text.secondary">
+                            Manage and view project analysis fields
+                        </Typography>
+                    </Box>
+                    <Button 
+                        variant="contained" 
+                        startIcon={<AddIcon />} 
+                        onClick={() => setAddDialogOpen(true)}
+                        sx={{
+                            borderRadius: 2,
+                            px: 3,
+                            py: 1,
+                            textTransform: 'none',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        Add Field
+                    </Button>
                 </Box>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddDialogOpen(true)}>
-                    添加字段
-                </Button>
-            </Box>
+            </Paper>
 
-            <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}>
-                <List>
+            <Paper 
+                elevation={3} 
+                sx={{ 
+                    borderRadius: 3, 
+                    overflow: 'hidden',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                }}
+            >
+                <List sx={{ p: 0 }}>
                     {loading ? (
-                        <ListItem>
-                            <Typography>加载中...</Typography>
+                        <ListItem sx={{ py: 4, justifyContent: 'center' }}>
+                            <Typography>Loading...</Typography>
                         </ListItem>
                     ) : fields.length === 0 ? (
-                        <ListItem>
-                            <Typography>暂无字段数据</Typography>
+                        <ListItem sx={{ py: 6, justifyContent: 'center' }}>
+                            <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
+                                No fields available
+                            </Typography>
                         </ListItem>
                     ) : (
-                        fields.map((field) => (
+                        fields.map((field, index) => (
                             <ListItem
                                 key={field.field_id}
+                                sx={{
+                                    p: 3,
+                                    borderBottom: index < fields.length - 1 ? '1px solid #f0f0f0' : 'none',
+                                    '&:hover': { bgcolor: 'action.hover' }
+                                }}
                                 secondaryAction={
-                                    <Box>
+                                    <Stack direction="row" spacing={1}>
                                         <IconButton
-                                            edge="end"
                                             onClick={() => {
                                                 setCurrentField(field);
                                                 setFormData(field);
                                                 setEditDialogOpen(true);
                                             }}
+                                            sx={{ 
+                                                color: 'primary.main',
+                                                '&:hover': { bgcolor: 'primary.lighter' }
+                                            }}
                                         >
                                             <EditIcon />
                                         </IconButton>
                                         <IconButton
-                                            edge="end"
                                             onClick={() => {
                                                 setCurrentField(field);
                                                 setDeleteDialogOpen(true);
                                             }}
+                                            sx={{ 
+                                                color: 'error.main',
+                                                '&:hover': { bgcolor: 'error.lighter' }
+                                            }}
                                         >
                                             <DeleteIcon />
                                         </IconButton>
-                                    </Box>
+                                    </Stack>
                                 }
                             >
-                                <ListItemText
-                                    primary={field.field_name}
-                                    secondary={`ID: ${field.field_id}`}
-                                />
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Avatar 
+                                        sx={{ 
+                                            bgcolor: 'primary.light',
+                                            mr: 2
+                                        }}
+                                    >
+                                        {field.field_name.charAt(0)}
+                                    </Avatar>
+                                    <Box>
+                                        <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                                            {field.field_name}
+                                        </Typography>
+                                        <Chip
+                                            label={`ID: ${field.field_id}`}
+                                            size="small"
+                                            sx={{ mt: 1 }}
+                                        />
+                                    </Box>
+                                </Box>
                             </ListItem>
                         ))
                     )}
                 </List>
             </Paper>
 
-            {/* 添加字段对话框 */}
+            {/* Add Field Dialog */}
             <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)}>
-                <DialogTitle>添加新字段</DialogTitle>
+                <DialogTitle>Add New Field</DialogTitle>
                 <DialogContent>
                     <FieldForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
-                    <Button onClick={handleAdd} variant="contained">添加</Button>
+                    <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleAdd} variant="contained">Add</Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑字段对话框 */}
+            {/* Edit Field Dialog */}
             <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
-                <DialogTitle>编辑字段</DialogTitle>
+                <DialogTitle>Edit Field</DialogTitle>
                 <DialogContent>
                     <FieldForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setEditDialogOpen(false)}>取消</Button>
-                    <Button onClick={handleEdit} variant="contained">保存</Button>
+                    <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleEdit} variant="contained">Save</Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 删除字段确认对话框 */}
+            {/* Delete Field Confirmation Dialog */}
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                <DialogTitle>确认删除</DialogTitle>
+                <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogContent>
-                    <Typography>确定要删除这个字段吗？此操作不可撤销。</Typography>
+                    <Typography>Are you sure you want to delete this field? This action cannot be undone.</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
-                    <Button onClick={handleDelete} color="error" variant="contained">删除</Button>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleDelete} color="error" variant="contained">Delete</Button>
                 </DialogActions>
             </Dialog>
         </Container>
