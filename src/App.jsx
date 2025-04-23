@@ -14,11 +14,14 @@ import SchoolIcon from '@mui/icons-material/School';
 import PostSearch from './pages/Posts/PostSearch';
 import ProjectSearch from './pages/Projects/ProjectSearch';
 import ProjectPosts from './pages/Projects/ProjectPosts';
+import MediaList from './pages/media/MediaList';
 import {
   Search as SearchIcon,
   AccountTree as ProjectIcon,
-  Group as GroupIcon
+  Group as GroupIcon,
+  Devices as MediaIcon
 } from '@mui/icons-material';
+// ... existing code ...
 
 function App() {
   const [value, setValue] = useState(0);
@@ -39,6 +42,7 @@ function App() {
       <div className="relative z-10 pb-16">
         <Routes>
           <Route path="/postsearch" element={<PostSearch />} />
+          <Route path="/projectlist" element={<ProjectList />} />
           <Route path="/" element={<PostSearch />} />
           <Route path="/projectsearch" element={<ProjectSearch />} />
           <Route path="/institutes" element={<InstituteList />} />
@@ -48,6 +52,7 @@ function App() {
           <Route path="/posts" element={<PostList />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/projects/:id/posts" element={<ProjectPosts />} />
+          <Route path="/medialist" element={<MediaList />} />
         </Routes>
 
         <BottomNavigation
@@ -66,6 +71,9 @@ function App() {
                 break;
               case 3:
                 navigate('/users');
+                break;
+              case 4:
+                navigate('/medialist');
                 break;
               default:
                 break;
@@ -86,6 +94,7 @@ function App() {
           <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
           <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
           <BottomNavigationAction label="Users" icon={<GroupIcon />} />
+          <BottomNavigationAction label="Media" icon={<MediaIcon />} />
         </BottomNavigation>
       </div>
     </div>

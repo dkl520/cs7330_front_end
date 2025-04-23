@@ -7,7 +7,16 @@ export default defineConfig({
   resolve: {
 
   },
-  base: './', 
+  base: './',
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000/api',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  },
   plugins: [
     react(),
     AutoImport({
