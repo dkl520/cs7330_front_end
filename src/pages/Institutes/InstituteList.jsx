@@ -85,7 +85,7 @@ const InstituteList = () => {
                 </Button>
             </Box>
 
-            <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'hidden' }}>
+            <Paper elevation={3} sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}>
                 <List>
                     {loading ? (
                         <ListItem>

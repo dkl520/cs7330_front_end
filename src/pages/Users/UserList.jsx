@@ -230,10 +230,12 @@ const UserList = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper
         elevation={0}
+        
         sx={{
           p: 3,
           mb: 4,
           borderRadius: 2,
+          overflow: 'auto', maxHeight: 'calc(100vh - 250px)',
           background: (theme) => alpha(theme.palette.primary.main, 0.05),
           display: 'flex',
           justifyContent: 'space-between',
