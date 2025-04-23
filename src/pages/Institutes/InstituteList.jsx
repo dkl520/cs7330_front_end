@@ -100,7 +100,7 @@ const InstituteList = () => {
                             <ListItem
                                 key={institute.institute_id}
                                 sx={{ p: 3, cursor: 'pointer', '&:hover': { bgcolor: 'action.hover' } }}
-                                onClick={() => navigate(`/institutes/${institute.institute_id}`)}
+                                onClick={() => navigate(`/projects/${institute.institute_id}`)}
                                 secondaryAction={
                                     <Stack direction="row" spacing={1}>
                                         <IconButton onClick={(e) => handleEditClick(institute, e)}><EditIcon /></IconButton>

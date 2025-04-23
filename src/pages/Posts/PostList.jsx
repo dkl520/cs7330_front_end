@@ -3,7 +3,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import zhLocale from 'date-fns/locale/zh-CN';
-
+import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+// import navigate from 'umi/navigate';
 import {
   Container,
   Typography,
@@ -41,12 +43,12 @@ const PostForm = ({ formData, setFormData }) => {
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhLocale}>
       <Stack spacing={2} sx={{ mt: 2 }}>
         {/* post_id 只读 */}
-        <TextField
+        {/* <TextField
           fullWidth
           label="Post ID"
           value={formData.post_id || ''}
           InputProps={{ readOnly: true }}
-        />
+        /> */}
 
         <TextField
           fullWidth
@@ -58,21 +60,21 @@ const PostForm = ({ formData, setFormData }) => {
           onChange={e => setFormData({ ...formData, content: e.target.value })}
         />
 
-        <TextField
+        {/* <TextField
           fullWidth
           label="User ID"
           type="number"
           value={formData.user_id}
           onChange={e => setFormData({ ...formData, user_id: Number(e.target.value) })}
-        />
+        /> */}
 
-        <TextField
+        {/* <TextField
           fullWidth
           label="Media ID"
           type="number"
           value={formData.media_id}
           onChange={e => setFormData({ ...formData, media_id: Number(e.target.value) })}
-        />
+        /> */}
 
         <TextField
           fullWidth
@@ -146,12 +148,15 @@ const PostList = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
-
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const userId = searchParams.get('user_id');
+  const mediaId = searchParams.get('media_id');
   const emptyPostData = {
     post_id: '',
     content: '',
-    user_id: '',
-    media_id: '',
+    user_id: userId,
+    media_id: mediaId,
     location_city: '',
     location_state: '',
     location_country: '',
@@ -166,7 +171,7 @@ const PostList = () => {
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await window.$api.post.list();
+      const response = await window.$api.post.getListById(userId, mediaId);
       setPosts(response || []);
     } catch (error) {
       console.error('获取帖子列表失败:', error);
@@ -236,6 +241,14 @@ const PostList = () => {
           onClick={() => setAddDialogOpen(true)}
         >
           发布帖子
+        </Button>
+
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => navigate(`/reposts?user_id=${userId}&media_id=${mediaId}`)}
+        >
+          转发帖子
         </Button>
       </Box>
 

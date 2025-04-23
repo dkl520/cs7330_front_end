@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -155,7 +157,7 @@ const UserList = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const emptyUserData = {
     media_id: '',
     user_id: '',
@@ -230,7 +232,7 @@ const UserList = () => {
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper
         elevation={0}
-        
+
         sx={{
           p: 3,
           mb: 4,
@@ -299,6 +301,7 @@ const UserList = () => {
                     transition: 'all 0.2s',
                     '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.03)' }
                   }}
+                  onClick={() => navigate(`/posts?user_id=${user.user_id}&media_id=${user.media_id}`)}
                 >
                   <UserAvatar user={user} />
                   <ListItemText

@@ -15,6 +15,8 @@ import PostSearch from './pages/Posts/PostSearch';
 import ProjectSearch from './pages/Projects/ProjectSearch';
 import ProjectPosts from './pages/Projects/ProjectPosts';
 import MediaList from './pages/media/MediaList';
+import Repost from './pages/Posts/repost';
+import ProjectField from './pages/Projects/ProjectField';
 import {
   Search as SearchIcon,
   AccountTree as ProjectIcon,
@@ -50,7 +52,9 @@ function App() {
           <Route path="/institutes/new" element={<InstituteForm />} />
           <Route path="/users" element={<UserList />} />
           <Route path="/posts" element={<PostList />} />
-          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/reposts" element={<Repost />} />
+          <Route path="/projectfield/:id" element={<ProjectField />} />
+          <Route path="/projects/:id" element={<ProjectList />} />
           <Route path="/projects/:id/posts" element={<ProjectPosts />} />
           <Route path="/medialist" element={<MediaList />} />
         </Routes>

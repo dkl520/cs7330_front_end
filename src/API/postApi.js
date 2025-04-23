@@ -6,6 +6,15 @@ export const postApi = {
     return axios.get('/post');
   },
 
+  getListById: (user_id, media_id) => {
+    return axios.get(`/post?user_id=${user_id}&media_id=${media_id}`);
+  },
+  // getPostById: (post_id) => {
+  //   return axios.get(`/post?post_id=${post_id}`);
+  // },
+  getAvailablePosts: (user_id, media_id) => {
+    return axios.get(`/get_available_posts?user_id=${user_id}&media_id=${media_id}`);
+  },
   // 创建帖子
   create: (data) => {
     return axios.post('/post/create', data);
@@ -27,13 +36,21 @@ export const postApi = {
   },
 
   // 获取转发列表
-  getReposts: () => {
-    return axios.get('/repost');
+  getReposts: (user_id) => {
+    return axios.get(`/repost?user_id=${user_id}`);
   },
 
   // 创建转发
   createRepost: (data) => {
     return axios.post('/repost/create', data);
+  },
+  // 批量转发
+  // {
+  //   user_id: 42,            // 当前用户
+  //   post_ids: [201, 202, 203, 204]  // 选择要转发的帖子 ID
+  // };
+  bulk_repost: (data) => {
+    return axios.post('/repost/bulk_repost', data);
   },
 
   // 获取转发详情

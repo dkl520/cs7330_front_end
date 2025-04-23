@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import zhLocale from 'date-fns/locale/zh-CN';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
     Container,
     Typography,
@@ -121,7 +121,7 @@ const ProjectList = () => {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [currentProject, setCurrentProject] = useState(null);
     const { id } = useParams();
-    const navigate = useNavigate();
+
     const emptyProjectData = {
         name: '',
         manager_first_name: '',
@@ -135,7 +135,7 @@ const ProjectList = () => {
     const fetchProjects = async () => {
         try {
             setLoading(true);
-            const response = await window.$api.project.list({ institute_id: id });
+            const response = await window.$api.project.list({institute_id: id});
             setProjects(response || []);
         } catch (error) {
             console.error('获取项目列表失败:', error);
@@ -212,7 +212,6 @@ const ProjectList = () => {
                     ) : (
                         projects.map((project, index) => (
                             <ListItem
-                                onClick={() => navigate(`/projectfield/${project.project_id}`)}
                                 key={project.project_id}
                                 sx={{
                                     p: 3,
