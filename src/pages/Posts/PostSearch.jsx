@@ -44,13 +44,8 @@ const PostSearch = () => {
         end_date: null,
     });
 
-    const [showFilters, setShowFilters] = useState(true);
-    const [searchResults, setSearchResults] = useState([]);
+    const [showFilters, setShowFilters] = useState(false);
     const [] = useState([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [mediaList, setMediaList] = useState([]);
