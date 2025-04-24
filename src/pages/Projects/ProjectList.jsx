@@ -21,6 +21,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogActions,
+    alpha,
     TextField
 } from '@mui/material';
 import {
@@ -54,7 +55,7 @@ const ProjectForm = ({ formData, setFormData }) => {
                 <TextField
                     fullWidth
                     required
-                    label="项目名称"
+                    label="Project Name"
                     value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                 />
@@ -62,7 +63,7 @@ const ProjectForm = ({ formData, setFormData }) => {
                 <TextField
                     fullWidth
                     required
-                    label="负责人名"
+                    label="Manager First Name"
                     value={formData.manager_first_name}
                     onChange={e => setFormData({ ...formData, manager_first_name: e.target.value })}
                 />
@@ -70,13 +71,13 @@ const ProjectForm = ({ formData, setFormData }) => {
                 <TextField
                     fullWidth
                     required
-                    label="负责人姓"
+                    label="Manager Last Name"
                     value={formData.manager_last_name}
                     onChange={e => setFormData({ ...formData, manager_last_name: e.target.value })}
                 />
 
                 <DatePicker
-                    label="开始日期"
+                    label="Start Date"
                     value={parseDate(formData.start_date)}
                     onChange={date => {
                         setFormData({ ...formData, start_date: formatDate(date) });
@@ -87,7 +88,7 @@ const ProjectForm = ({ formData, setFormData }) => {
                 />
 
                 <DatePicker
-                    label="结束日期"
+                    label="End Date"
                     value={parseDate(formData.end_date)}
                     onChange={date => {
                         setFormData({ ...formData, end_date: formatDate(date) });
@@ -96,17 +97,9 @@ const ProjectForm = ({ formData, setFormData }) => {
                         textField: { fullWidth: true, required: true }
                     }}
                 />
-
-                {/* <TextField
-                    fullWidth
-                    required
-                    type="number"
-                    label="研究所ID"
-                    value={formData.institute_id}
-                    onChange={e => setFormData({ ...formData, institute_id: e.target.value })}
-                /> */}
             </Stack>
         </LocalizationProvider>
+
     );
 };
 
@@ -188,27 +181,29 @@ const ProjectList = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                 <Box>
                     <Typography variant="h4" component="h1" gutterBottom>
-                        项目列表
+                        Project List
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
-                        管理和查看所有项目信息
+                        Manage and view all project information
                     </Typography>
                 </Box>
                 <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddDialogOpen(true)}>
-                    添加项目
+                    Add Project
                 </Button>
             </Box>
+
 
             <Paper elevation={3}>
                 <List>
                     {loading ? (
                         <ListItem>
-                            <Typography>加载中...</Typography>
+                            <Typography>loading...</Typography>
                         </ListItem>
                     ) : projects.length === 0 ? (
                         <ListItem>
-                            <Typography>暂无项目数据</Typography>
+                            <Typography>No project data available</Typography>
                         </ListItem>
+
                     ) : (
                         projects.map((project, index) => (
                             <ListItem
@@ -221,15 +216,38 @@ const ProjectList = () => {
                                 }}
                                 secondaryAction={
                                     <Stack direction="row" spacing={1}>
-                                        <IconButton
-                                            onClick={() => {
+                                        {/* <IconButton
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 setCurrentProject(project);
                                                 setFormData(project);
                                                 setEditDialogOpen(true);
                                             }}
                                         >
                                             <EditIcon />
-                                        </IconButton>
+                                        </IconButton> */}
+
+
+
+                                        <Tooltip title="Edit">
+                                            <IconButton
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setCurrentProject(project);
+                                                    setFormData(project);
+                                                    setEditDialogOpen(true);
+                                                }}
+                                                sx={{
+                                                    color: 'primary.main',
+                                                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+                                                    '&:hover': { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) },
+                                                }}
+                                                size="small"
+                                            >
+                                                <EditIcon fontSize="small" />
+                                            </IconButton>
+                                        </Tooltip>
+
                                         <IconButton
                                             onClick={() => {
                                                 setCurrentProject(project);
@@ -260,19 +278,19 @@ const ProjectList = () => {
                                                 <Stack direction="row" spacing={1} alignItems="center">
                                                     <SchoolIcon fontSize="small" />
                                                     <Typography variant="body2">
-                                                        {`研究所 ID: ${project.institute_id}`}
+                                                        {`Institute ID: ${project.institute_id}`}
                                                     </Typography>
                                                 </Stack>
                                             </Stack>
                                             <Stack direction="row" spacing={2}>
                                                 <Chip
                                                     icon={<CalendarIcon />}
-                                                    label={`开始: ${project.start_date}`}
+                                                    label={`start: ${project.start_date}`}
                                                     size="small"
                                                 />
                                                 <Chip
                                                     icon={<CalendarIcon />}
-                                                    label={`结束: ${project.end_date}`}
+                                                    label={`end: ${project.end_date}`}
                                                     size="small"
                                                 />
                                             </Stack>
@@ -303,34 +321,35 @@ const ProjectList = () => {
 
             {/* 编辑项目对话框 */}
             <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle component="div">编辑项目</DialogTitle>
+                <DialogTitle component="div">Edit Project</DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ mb: 2 }}>请修改项目信息</DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>Please modify the project information</DialogContentText>
                     <ProjectForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setEditDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleEdit} variant="contained">
-                        保存
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 删除确认对话框 */}
+            {/* Delete Confirmation Dialog */}
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                <DialogTitle component="div">确认删除</DialogTitle>
+                <DialogTitle component="div">Confirm Deletion</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        确定要删除项目 "{currentProject?.name}" 吗？此操作不可撤销。
+                        Are you sure you want to delete the project "{currentProject?.name}"? This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleDelete} color="error" variant="contained">
-                        删除
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>
+
         </Container>
     );
 };

@@ -188,7 +188,7 @@ const PostList = () => {
   const userId = searchParams.get('user_id');
   const mediaId = searchParams.get('media_id');
   const theme = useTheme();
-  
+
   const emptyPostData = {
     post_id: '',
     content: '',
@@ -259,7 +259,7 @@ const PostList = () => {
       console.error('Failed to delete post:', error);
     }
   };
-  
+
   const getRandomColor = (id) => {
     const colors = [
       theme.palette.primary.main,
@@ -273,10 +273,10 @@ const PostList = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         mb: 4,
         pb: 3,
         borderBottom: `1px solid ${theme.palette.divider}`
@@ -286,7 +286,7 @@ const PostList = () => {
             POSTS
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-              user posts
+            user posts
           </Typography>
         </Box>
 
@@ -295,7 +295,7 @@ const PostList = () => {
             variant="contained"
             startIcon={<RepeatIcon />}
             onClick={() => navigate(`/reposts?user_id=${userId}&media_id=${mediaId}`)}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               bgcolor: theme.palette.secondary.main,
               '&:hover': {
@@ -305,12 +305,12 @@ const PostList = () => {
           >
             Repost
           </Button>
-          
+
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setAddDialogOpen(true)}
-            sx={{ 
+            sx={{
               borderRadius: 2,
               boxShadow: theme.shadows[2],
               '&:hover': {
@@ -328,12 +328,15 @@ const PostList = () => {
           <CircularProgress />
         </Box>
       ) : posts.length === 0 ? (
-        <Paper 
-          elevation={0} 
-          sx={{ 
-            p: 6, 
-            borderRadius: 3, 
+        <Paper
+          elevation={0}
+          sx={{
+            p: 6,
+            borderRadius: 3,
             textAlign: 'center',
+            overflow: 'auto',
+            height: '70vh',
+            maxHeight: '70vh',
             bgcolor: alpha(theme.palette.primary.light, 0.1),
             border: `1px dashed ${theme.palette.primary.main}`
           }}
@@ -346,155 +349,168 @@ const PostList = () => {
           </Typography>
         </Paper>
       ) : (
-        <Stack spacing={3}>
-          {posts.map((post) => (
-            <Card 
-              key={post.post_id} 
-              elevation={2}
-              sx={{ 
-                borderRadius: 3, 
-                overflow: 'hidden',
-                transition: 'all 0.3s',
-                '&:hover': { 
-                  transform: 'translateY(-4px)',
-                  boxShadow: theme.shadows[8]
-                }
-              }}
-            >
-              <CardContent sx={{ p: 3 }}>
-                <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                  <Avatar 
-                    sx={{ 
-                      bgcolor: getRandomColor(post.user_id),
-                      width: 48,
-                      height: 48
-                    }}
-                  >
-                    {post.user_id?.toString().charAt(0) || 'U'}
-                  </Avatar>
-                  
-                  <Box sx={{ flex: 1 }}>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
-                        mb: 2, 
-                        fontSize: '1.1rem',
-                        whiteSpace: 'pre-line' 
+        <Paper
+          elevation={2}
+
+          sx={{
+            borderRadius: 3,
+            overflow: 'auto',
+            // height: '70vh',
+            maxHeight: '72vh',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+          }}
+        >
+          <Stack spacing={3}>
+            {posts.map((post) => (
+              <Card
+                key={post.post_id}
+                elevation={2}
+                sx={{
+                  borderRadius: 3,
+                  overflow: 'hidden',
+                  transition: 'all 0.3s',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    boxShadow: theme.shadows[8]
+                  }
+                }}
+              >
+                <CardContent sx={{ p: 3 }}>
+                  <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+                    <Avatar
+                      sx={{
+                        bgcolor: getRandomColor(post.user_id),
+                        width: 48,
+                        height: 48
                       }}
                     >
-                      {post.content}
-                    </Typography>
-                    
-                    <Stack 
-                      direction="row" 
-                      spacing={3} 
-                      sx={{ 
-                        flexWrap: 'wrap', 
-                        alignItems: 'center',
-                        mb: 2
-                      }}
-                    >
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <LikeIcon fontSize="small" color="primary" />
-                        <Typography component="span" variant="body2">
-                          {post.likes}
-                        </Typography>
+                      {post.user_id?.toString().charAt(0) || 'U'}
+                    </Avatar>
+
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          mb: 2,
+                          fontSize: '1.1rem',
+                          whiteSpace: 'pre-line'
+                        }}
+                      >
+                        {post.content}
+                      </Typography>
+
+                      <Stack
+                        direction="row"
+                        spacing={3}
+                        sx={{
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          mb: 2
+                        }}
+                      >
+                        <Stack direction="row" spacing={0.5} alignItems="center">
+                          <LikeIcon fontSize="small" color="primary" />
+                          <Typography component="span" variant="body2">
+                            {post.likes}
+                          </Typography>
+                        </Stack>
+
+                        <Stack direction="row" spacing={0.5} alignItems="center">
+                          <DislikeIcon fontSize="small" color="error" />
+                          <Typography component="span" variant="body2">
+                            {post.dislikes}
+                          </Typography>
+                        </Stack>
+
+                        {post.has_multimedia && (
+                          <Chip
+                            icon={<ImageIcon fontSize="small" />}
+                            label="Multimedia"
+                            size="small"
+                            sx={{ bgcolor: alpha(theme.palette.info.main, 0.1), color: theme.palette.info.main }}
+                          />
+                        )}
                       </Stack>
-                      
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <DislikeIcon fontSize="small" color="error" />
-                        <Typography component="span" variant="body2">
-                          {post.dislikes}
-                        </Typography>
-                      </Stack>
-                      
-                      {post.has_multimedia && (
-                        <Chip 
-                          icon={<ImageIcon fontSize="small" />} 
-                          label="Multimedia" 
+
+                      <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
+                        <Chip
+                          icon={<LocationIcon fontSize="small" />}
+                          label={`${post.location_city || 'Unknown'}, ${post.location_state || 'Unknown'}, ${post.location_country || 'Unknown'}`}
                           size="small"
-                          sx={{ bgcolor: alpha(theme.palette.info.main, 0.1), color: theme.palette.info.main }}
+                          sx={{
+                            bgcolor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.main,
+                            '& .MuiChip-icon': {
+                              color: theme.palette.primary.main
+                            }
+                          }}
                         />
-                      )}
-                    </Stack>
-                    
-                    <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
-                      <Chip
-                        icon={<LocationIcon fontSize="small" />}
-                        label={`${post.location_city || 'Unknown'}, ${post.location_state || 'Unknown'}, ${post.location_country || 'Unknown'}`}
-                        size="small"
-                        sx={{ 
-                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+
+                        <Chip
+                          icon={<TimeIcon fontSize="small" />}
+                          label={new Date(post.post_time).toLocaleString()}
+                          size="small"
+                          sx={{
+                            bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                            color: theme.palette.secondary.main,
+                            '& .MuiChip-icon': {
+                              color: theme.palette.secondary.main
+                            }
+                          }}
+                        />
+                      </Stack>
+                    </Box>
+
+                    <Stack direction="column" spacing={1}>
+                      <IconButton
+                        onClick={() => {
+                          setCurrentPost(post);
+                          setFormData(post);
+                          setEditDialogOpen(true);
+                        }}
+                        sx={{
                           color: theme.palette.primary.main,
-                          '& .MuiChip-icon': {
-                            color: theme.palette.primary.main
+                          bgcolor: alpha(theme.palette.primary.main, 0.1),
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.2)
                           }
                         }}
-                      />
-                      
-                      <Chip
-                        icon={<TimeIcon fontSize="small" />}
-                        label={new Date(post.post_time).toLocaleString()}
                         size="small"
-                        sx={{ 
-                          bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                          color: theme.palette.secondary.main,
-                          '& .MuiChip-icon': {
-                            color: theme.palette.secondary.main
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+
+                      <IconButton
+                        onClick={() => {
+                          setCurrentPost(post);
+                          setDeleteDialogOpen(true);
+                        }}
+                        sx={{
+                          color: theme.palette.error.main,
+                          bgcolor: alpha(theme.palette.error.main, 0.1),
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.error.main, 0.2)
                           }
                         }}
-                      />
+                        size="small"
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
                     </Stack>
                   </Box>
-                  
-                  <Stack direction="column" spacing={1}>
-                    <IconButton
-                      onClick={() => {
-                        setCurrentPost(post);
-                        setFormData(post);
-                        setEditDialogOpen(true);
-                      }}
-                      sx={{ 
-                        color: theme.palette.primary.main,
-                        bgcolor: alpha(theme.palette.primary.main, 0.1),
-                        '&:hover': { 
-                          bgcolor: alpha(theme.palette.primary.main, 0.2) 
-                        }
-                      }}
-                      size="small"
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    
-                    <IconButton
-                      onClick={() => {
-                        setCurrentPost(post);
-                        setDeleteDialogOpen(true);
-                      }}
-                      sx={{ 
-                        color: theme.palette.error.main,
-                        bgcolor: alpha(theme.palette.error.main, 0.1),
-                        '&:hover': { 
-                          bgcolor: alpha(theme.palette.error.main, 0.2) 
-                        }
-                      }}
-                      size="small"
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Stack>
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+        </Paper>
+
       )}
 
       {/* Add post dialog */}
-      <Dialog 
-        open={addDialogOpen} 
-        onClose={() => setAddDialogOpen(false)} 
-        fullWidth 
+      <Dialog
+        open={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        fullWidth
         maxWidth="md"
         PaperProps={{
           sx: { borderRadius: 3 }
@@ -519,8 +535,8 @@ const PostList = () => {
           >
             Cancel
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleAdd}
             startIcon={<SendIcon />}
             sx={{ borderRadius: 2 }}
@@ -531,10 +547,10 @@ const PostList = () => {
       </Dialog>
 
       {/* Edit post dialog */}
-      <Dialog 
-        open={editDialogOpen} 
-        onClose={() => setEditDialogOpen(false)} 
-        fullWidth 
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        fullWidth
         maxWidth="md"
         PaperProps={{
           sx: { borderRadius: 3 }
@@ -550,14 +566,14 @@ const PostList = () => {
           <PostForm formData={formData} setFormData={setFormData} />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
+          <Button
             onClick={() => setEditDialogOpen(false)}
             sx={{ borderRadius: 2 }}
           >
             Cancel
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleEdit}
             startIcon={<EditIcon />}
             sx={{ borderRadius: 2 }}
@@ -568,8 +584,8 @@ const PostList = () => {
       </Dialog>
 
       {/* Delete confirmation dialog */}
-      <Dialog 
-        open={deleteDialogOpen} 
+      <Dialog
+        open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
         PaperProps={{
           sx: { borderRadius: 3 }
@@ -587,15 +603,15 @@ const PostList = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
-          <Button 
+          <Button
             onClick={() => setDeleteDialogOpen(false)}
             sx={{ borderRadius: 2 }}
           >
             Cancel
           </Button>
-          <Button 
-            color="error" 
-            variant="contained" 
+          <Button
+            color="error"
+            variant="contained"
             onClick={handleDelete}
             startIcon={<DeleteIcon />}
             sx={{ borderRadius: 2 }}

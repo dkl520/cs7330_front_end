@@ -57,7 +57,7 @@ export default function RepostList() {
     fetchReposts();
     // fetchAvailablePosts()
   }, []);
-  
+
   useEffect(() => {
     if (reposts.length) fetchOriginals(reposts);
   }, [reposts]);
@@ -161,15 +161,15 @@ export default function RepostList() {
           background: (theme) => theme.palette.grey[50],
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <Box>
           <Typography variant="h4" gutterBottom fontWeight="500">
-            转发管理
+            Repost Management
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
-            查看并管理所有转发记录
+            View and manage all repost records
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -180,7 +180,7 @@ export default function RepostList() {
               startIcon={<RefreshIcon />}
               onClick={fetchReposts}
             >
-              刷新
+              Refresh
             </Button>
           </div>
           <div>
@@ -193,16 +193,17 @@ export default function RepostList() {
               }}
               disableElevation
             >
-              添加转发
+              Add Repost
             </Button>
           </div>
         </Box>
       </Paper>
 
+
       {/** Repost list as accordions **/}
       <Paper
         elevation={3}
-        sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}
+        sx={{ borderRadius: 3, overflow: 'auto', maxHeight: '72vh' }}
       >
         {reposts.length === 0 ? (
           <Box p={3}>

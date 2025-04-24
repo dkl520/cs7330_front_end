@@ -190,12 +190,14 @@ const MediaList = () => {
             </Paper>
 
             {/* Media list */}
-            <Paper 
-                elevation={3} 
-                sx={{ 
-                    borderRadius: 3, 
-                    overflow: 'hidden',
-                    maxHeight: 'calc(100vh - 250px)'
+            <Paper
+                elevation={3}
+                sx={{
+                    borderRadius: 3,
+                    overflow: 'auto',
+                    // height: '70vh',
+                    // height: 'calc(100vh - 250px)',
+                    maxHeight: '70vh'
                 }}
             >
                 {medias.length === 0 ? (
@@ -214,10 +216,10 @@ const MediaList = () => {
                             <ListItem
                                 key={media.media_id}
                                 divider={index < medias.length - 1}
-                                sx={{ 
+                                sx={{
                                     py: 2,
-                                    "&:hover": { 
-                                        backgroundColor: 'rgba(0, 0, 0, 0.04)' 
+                                    "&:hover": {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.04)'
                                     }
                                 }}
                                 secondaryAction={
@@ -234,6 +236,9 @@ const MediaList = () => {
                                             >
                                                 <EditIcon />
                                             </IconButton>
+
+
+                                            
                                         </Tooltip>
                                         <Tooltip title="Delete">
                                             <IconButton
@@ -251,9 +256,9 @@ const MediaList = () => {
                                     </Box>
                                 }
                             >
-                                <Avatar 
-                                    sx={{ 
-                                        mr: 2, 
+                                <Avatar
+                                    sx={{
+                                        mr: 2,
                                         bgcolor: getAvatarColor(media.name),
                                         width: 40,
                                         height: 40
@@ -280,8 +285,8 @@ const MediaList = () => {
             </Paper>
 
             {/* Add media dialog */}
-            <Dialog 
-                open={addDialogOpen} 
+            <Dialog
+                open={addDialogOpen}
                 onClose={() => setAddDialogOpen(false)}
                 fullWidth
                 maxWidth="sm"
@@ -298,9 +303,9 @@ const MediaList = () => {
                     <Button onClick={() => setAddDialogOpen(false)} color="inherit">
                         Cancel
                     </Button>
-                    <Button 
-                        onClick={handleAdd} 
-                        variant="contained" 
+                    <Button
+                        onClick={handleAdd}
+                        variant="contained"
                         disableElevation
                     >
                         Add
@@ -309,8 +314,8 @@ const MediaList = () => {
             </Dialog>
 
             {/* Edit media dialog */}
-            <Dialog 
-                open={editDialogOpen} 
+            <Dialog
+                open={editDialogOpen}
                 onClose={() => setEditDialogOpen(false)}
                 fullWidth
                 maxWidth="sm"
@@ -327,8 +332,8 @@ const MediaList = () => {
                     <Button onClick={() => setEditDialogOpen(false)} color="inherit">
                         Cancel
                     </Button>
-                    <Button 
-                        onClick={handleEdit} 
+                    <Button
+                        onClick={handleEdit}
                         variant="contained"
                         disableElevation
                     >
@@ -338,8 +343,8 @@ const MediaList = () => {
             </Dialog>
 
             {/* Delete confirmation dialog */}
-            <Dialog 
-                open={deleteDialogOpen} 
+            <Dialog
+                open={deleteDialogOpen}
                 onClose={() => setDeleteDialogOpen(false)}
                 fullWidth
                 maxWidth="sm"
@@ -365,9 +370,9 @@ const MediaList = () => {
                     <Button onClick={() => setDeleteDialogOpen(false)} color="inherit">
                         Cancel
                     </Button>
-                    <Button 
-                        onClick={handleDelete} 
-                        color="error" 
+                    <Button
+                        onClick={handleDelete}
+                        color="error"
                         variant="contained"
                         disableElevation
                     >

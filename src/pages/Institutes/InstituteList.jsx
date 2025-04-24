@@ -128,6 +128,7 @@ const InstituteList = () => {
                     borderRadius: 4,
                     overflow: 'auto',
                     maxHeight: 'calc(100vh - 250px)',
+                    // height: 'calc(100vh - 250px)',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
                 }}
             >
@@ -150,6 +151,7 @@ const InstituteList = () => {
                                     p: 3,
                                     cursor: 'pointer',
                                     '&:hover': { bgcolor: 'action.hover' },
+                                    // marginBottom: '10px',
                                     borderBottom: index < institutes.length - 1 ? '1px solid #f0f0f0' : 'none'
                                 }}
                                 onClick={() => navigate(`/projects/${institute.institute_id}`)}

@@ -82,16 +82,12 @@ const PostSearch = () => {
     const handleSearch = async () => {
         setShowFilters(false)
         try {
-            const response = await window.$api.post.PostSearch(searchData);
-            debugger
+            const response = await window.$api.search.PostSearch(searchData);
             setPosts(response);
         } catch (error) {
             console.error('Failed to fetch field list:', error);
-            setMediaList([]);
         } finally {
         }
-        // setShowFilters(false)
-        // In actual application, this would call an API
     };
 
     const handleClear = () => {
@@ -299,166 +295,171 @@ const PostSearch = () => {
                     </Typography>
                 </Paper>
             ) : (
-                <Stack spacing={3}>
-                    {posts.map((post) => (
-                        <Card
-                            key={post.post_id}
-                            elevation={0}
-                            sx={{
-                                borderRadius: 3,
-                                overflow: 'hidden',
-                                transition: 'all 0.3s',
-                                border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
-                                background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${alpha(theme.palette.grey[50], 0.7)})`,
-                                boxShadow: `0 10px 20px -10px ${alpha(theme.palette.grey[700], 0.1)}`,
-                                '&:hover': {
-                                    transform: 'translateY(-4px)',
-                                    boxShadow: `0 14px 28px -12px ${alpha(theme.palette.grey[700], 0.15)}`,
-                                    borderColor: alpha(theme.palette.primary.main, 0.3)
-                                }
-                            }}
-                        >
-                            <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-                                <Box sx={{ display: 'flex', gap: { xs: 2, sm: 3 } }}>
-                                    <Avatar
-                                        sx={{
-                                            bgcolor: getRandomColor(post.username),
-                                            width: { xs: 42, sm: 48 },
-                                            height: { xs: 42, sm: 48 },
-                                            fontSize: { xs: '1.2rem', sm: '1.4rem' },
-                                            fontWeight: 600,
-                                            boxShadow: `0 4px 8px ${alpha(theme.palette.grey[700], 0.15)}`
-                                        }}
-                                    >
-                                        {post.username?.toString().charAt(0) || 'U'}
-                                    </Avatar>
-
-                                    <Box sx={{ flex: 1 }}>
-                                        <Typography
-                                            variant="h6"
+                <Paper
+                    elevation={3}
+                    sx={{ borderRadius: 3, overflow:'auto',  maxHeight: '72vh' }}
+                >
+                    <Stack spacing={3}>
+                        {posts.map((post,i) => (
+                            <Card
+                                key={i}
+                                elevation={0}
+                                sx={{
+                                    borderRadius: 3,
+                                    overflow: 'hidden',
+                                    transition: 'all 0.3s',
+                                    border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+                                    background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${alpha(theme.palette.grey[50], 0.7)})`,
+                                    boxShadow: `0 10px 20px -10px ${alpha(theme.palette.grey[700], 0.1)}`,
+                                    '&:hover': {
+                                        transform: 'translateY(-4px)',
+                                        boxShadow: `0 14px 28px -12px ${alpha(theme.palette.grey[700], 0.15)}`,
+                                        borderColor: alpha(theme.palette.primary.main, 0.3)
+                                    }
+                                }}
+                            >
+                                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                                    <Box sx={{ display: 'flex', gap: { xs: 2, sm: 3 } }}>
+                                        <Avatar
                                             sx={{
+                                                bgcolor: getRandomColor(post.username),
+                                                width: { xs: 42, sm: 48 },
+                                                height: { xs: 42, sm: 48 },
+                                                fontSize: { xs: '1.2rem', sm: '1.4rem' },
                                                 fontWeight: 600,
-                                                mb: 0.5,
-                                                color: theme.palette.text.primary,
-                                                fontSize: { xs: '1rem', sm: '1.1rem' }
+                                                boxShadow: `0 4px 8px ${alpha(theme.palette.grey[700], 0.15)}`
                                             }}
                                         >
-                                            {post.username || 'Anonymous User'}
-                                        </Typography>
+                                            {post.username?.toString().charAt(0) || 'U'}
+                                        </Avatar>
 
-                                        <Typography
-                                            variant="body1"
-                                            sx={{
-                                                mb: 2.5,
-                                                whiteSpace: 'pre-line',
-                                                color: theme.palette.text.primary,
-                                                lineHeight: 1.6
-                                            }}
-                                        >
-                                            {post.content}
-                                        </Typography>
-
-                                        {/* Experiments List Display */}
-                                        {post.experiments && post.experiments.length > 0 && (
-                                            <Box
+                                        <Box sx={{ flex: 1 }}>
+                                            <Typography
+                                                variant="h6"
                                                 sx={{
-                                                    mb: 2.5,
-                                                    p: 1.5,
-                                                    borderRadius: 2,
-                                                    background: alpha(theme.palette.background.default, 0.6),
-                                                    border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+                                                    fontWeight: 600,
+                                                    mb: 0.5,
+                                                    color: theme.palette.text.primary,
+                                                    fontSize: { xs: '1rem', sm: '1.1rem' }
                                                 }}
                                             >
-                                                <Typography
-                                                    variant="subtitle2"
+                                                {post.username || 'Anonymous User'}
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body1"
+                                                sx={{
+                                                    mb: 2.5,
+                                                    whiteSpace: 'pre-line',
+                                                    color: theme.palette.text.primary,
+                                                    lineHeight: 1.6
+                                                }}
+                                            >
+                                                {post.content}
+                                            </Typography>
+
+                                            {/* Experiments List Display */}
+                                            {post.experiments && post.experiments.length > 0 && (
+                                                <Box
                                                     sx={{
-                                                        mb: 1,
-                                                        color: theme.palette.text.secondary,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        gap: 0.5,
-                                                        fontWeight: 600
+                                                        mb: 2.5,
+                                                        p: 1.5,
+                                                        borderRadius: 2,
+                                                        background: alpha(theme.palette.background.default, 0.6),
+                                                        border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
                                                     }}
                                                 >
-                                                    <ScienceIcon fontSize="small" sx={{ color: theme.palette.info.main }} />
-                                                    Experiments
-                                                </Typography>
-                                                <Stack direction="row" spacing={1} flexWrap="wrap">
-                                                    {post.experiments.map((experiment, index) => (
-                                                        <Chip
-                                                            key={index}
-                                                            label={experiment}
-                                                            size="small"
-                                                            sx={{
-                                                                bgcolor: alpha(theme.palette.info.main, 0.05),
-                                                                color: theme.palette.info.dark,
-                                                                fontWeight: 500,
-                                                                '&:hover': {
-                                                                    bgcolor: alpha(theme.palette.info.main, 0.1),
-                                                                },
-                                                                border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
-                                                                boxShadow: `0 2px 4px ${alpha(theme.palette.info.main, 0.05)}`,
-                                                                mb: 0.5
-                                                            }}
-                                                        />
-                                                    ))}
-                                                </Stack>
-                                            </Box>
-                                        )}
+                                                    <Typography
+                                                        variant="subtitle2"
+                                                        sx={{
+                                                            mb: 1,
+                                                            color: theme.palette.text.secondary,
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 0.5,
+                                                            fontWeight: 600
+                                                        }}
+                                                    >
+                                                        <ScienceIcon fontSize="small" sx={{ color: theme.palette.info.main }} />
+                                                        Experiments
+                                                    </Typography>
+                                                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                                                        {post.experiments.map((experiment, index) => (
+                                                            <Chip
+                                                                key={index}
+                                                                label={experiment}
+                                                                size="small"
+                                                                sx={{
+                                                                    bgcolor: alpha(theme.palette.info.main, 0.05),
+                                                                    color: theme.palette.info.dark,
+                                                                    fontWeight: 500,
+                                                                    '&:hover': {
+                                                                        bgcolor: alpha(theme.palette.info.main, 0.1),
+                                                                    },
+                                                                    border: `1px solid ${alpha(theme.palette.info.main, 0.2)}`,
+                                                                    boxShadow: `0 2px 4px ${alpha(theme.palette.info.main, 0.05)}`,
+                                                                    mb: 0.5
+                                                                }}
+                                                            />
+                                                        ))}
+                                                    </Stack>
+                                                </Box>
+                                            )}
 
-                                        <Stack
-                                            direction="row"
-                                            spacing={1.5}
-                                            alignItems="center"
-                                            flexWrap="wrap"
-                                            sx={{
-                                                pt: 0.5,
-                                                borderTop: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
-                                                px: 0.5
-                                            }}
-                                        >
-                                            <Chip
-                                                icon={<PersonIcon fontSize="small" />}
-                                                label={post.media || 'Unknown Source'}
-                                                size="small"
+                                            <Stack
+                                                direction="row"
+                                                spacing={1.5}
+                                                alignItems="center"
+                                                flexWrap="wrap"
                                                 sx={{
-                                                    bgcolor: alpha(theme.palette.primary.main, 0.05),
-                                                    color: theme.palette.primary.dark,
-                                                    fontWeight: 500,
-                                                    border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-                                                    '&:hover': {
-                                                        bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                                    },
-                                                    '& .MuiChip-icon': {
-                                                        color: alpha(theme.palette.primary.main, 0.8)
-                                                    }
+                                                    pt: 0.5,
+                                                    borderTop: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+                                                    px: 0.5
                                                 }}
-                                            />
+                                            >
+                                                <Chip
+                                                    icon={<PersonIcon fontSize="small" />}
+                                                    label={post.media || 'Unknown Source'}
+                                                    size="small"
+                                                    sx={{
+                                                        bgcolor: alpha(theme.palette.primary.main, 0.05),
+                                                        color: theme.palette.primary.dark,
+                                                        fontWeight: 500,
+                                                        border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                                                        '&:hover': {
+                                                            bgcolor: alpha(theme.palette.primary.main, 0.1),
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: alpha(theme.palette.primary.main, 0.8)
+                                                        }
+                                                    }}
+                                                />
 
-                                            <Chip
-                                                icon={<AccessTimeIcon fontSize="small" />}
-                                                label={post.time || 'Unknown Time'}
-                                                size="small"
-                                                sx={{
-                                                    bgcolor: alpha(theme.palette.secondary.main, 0.05),
-                                                    color: theme.palette.secondary.dark,
-                                                    fontWeight: 500,
-                                                    border: `1px solid ${alpha(theme.palette.secondary.main, 0.15)}`,
-                                                    '&:hover': {
-                                                        bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                                                    },
-                                                    '& .MuiChip-icon': {
-                                                        color: alpha(theme.palette.secondary.main, 0.8)
-                                                    }
-                                                }}
-                                            />
-                                        </Stack>
+                                                <Chip
+                                                    icon={<AccessTimeIcon fontSize="small" />}
+                                                    label={post.time || 'Unknown Time'}
+                                                    size="small"
+                                                    sx={{
+                                                        bgcolor: alpha(theme.palette.secondary.main, 0.05),
+                                                        color: theme.palette.secondary.dark,
+                                                        fontWeight: 500,
+                                                        border: `1px solid ${alpha(theme.palette.secondary.main, 0.15)}`,
+                                                        '&:hover': {
+                                                            bgcolor: alpha(theme.palette.secondary.main, 0.1),
+                                                        },
+                                                        '& .MuiChip-icon': {
+                                                            color: alpha(theme.palette.secondary.main, 0.8)
+                                                        }
+                                                    }}
+                                                />
+                                            </Stack>
+                                        </Box>
                                     </Box>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </Stack>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </Stack>
+                </Paper>
             )}
 
             {/* Add the getRandomColor function if it's not already defined elsewhere */}

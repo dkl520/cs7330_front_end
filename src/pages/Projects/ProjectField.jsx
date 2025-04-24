@@ -140,7 +140,8 @@ const ProjectField = () => {
                 elevation={3} 
                 sx={{ 
                     borderRadius: 3, 
-                    overflow: 'hidden',
+                   
+                    overflow: 'auto',  maxHeight: '70vh',
                     boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
                 }}
             >
