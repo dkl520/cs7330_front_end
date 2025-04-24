@@ -1,3 +1,4 @@
+import PostSearch from '../pages/Posts/PostSearch';
 import axios from './axiosConfig';
 
 export const postApi = {
@@ -78,5 +79,11 @@ export const postApi = {
   // 删除转发
   deleteRepost: (id) => {
     return axios.delete(`/repost/${id}`);
+  },
+
+  PostSearch: (params) => {
+    return axios.get(`/query/post`, { params })
   }
+
+
 };

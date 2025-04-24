@@ -34,12 +34,13 @@ import {
 
 
 // Post Search Component
-const PostSearch = () => {
+const ExperSearch = () => {
     // State management
     const [searchData, setSearchData] = useState({
         media_id: '',
         username: '',
         author: '',
+        keyword: '',
         start_date: null,
         end_date: null,
     });
@@ -104,6 +105,7 @@ const PostSearch = () => {
             media_id: '',
             username: '',
             author: '',
+            keyword: '',
             start_date: null,
             end_date: null,
         });
@@ -156,8 +158,9 @@ const PostSearch = () => {
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
+
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4">Post Search</Typography>
+                <Typography variant="h4">Experiment Search</Typography>
 
                 <Button
                     variant="outlined"
@@ -172,7 +175,6 @@ const PostSearch = () => {
                 </Button>
             </Box>
 
-            {/* Filter Panel - using absolute positioning */}
             <Box sx={{
                 position: 'relative',
                 zIndex: 10,
@@ -225,34 +227,35 @@ const PostSearch = () => {
                                     onChange={(e) => handleFilterChange('author', e.target.value)}
                                 />
 
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label="Start Date"
+                                            value={searchData.start_date}
+                                            onChange={(date) => handleFilterChange('start_date', date)}
+                                            slotProps={{
+                                                textField: {
+                                                    sx: { width: '220px' },
+                                                    size: "small"
+                                                }
+                                            }}
+                                        />
+                                    </LocalizationProvider>
 
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label="Start Date"
-                                        value={searchData.start_date}
-                                        onChange={(date) => handleFilterChange('start_date', date)}
-                                        slotProps={{
-                                            textField: {
-                                                sx: { width: '220px' },
-                                                size: "small"
-                                            }
-                                        }}
-                                    />
-                                </LocalizationProvider>
-
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label="End Date"
-                                        value={searchData.end_date}
-                                        onChange={(date) => handleFilterChange('end_date', date)}
-                                        slotProps={{
-                                            textField: {
-                                                sx: { width: '220px' },
-                                                size: "small"
-                                            }
-                                        }}
-                                    />
-                                </LocalizationProvider>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label="End Date"
+                                            value={searchData.end_date}
+                                            onChange={(date) => handleFilterChange('end_date', date)}
+                                            slotProps={{
+                                                textField: {
+                                                    sx: { width: '220px' },
+                                                    size: "small"
+                                                }
+                                            }}
+                                        />
+                                    </LocalizationProvider>
+                                </Box>
                             </Box>
 
                             <Stack direction="row" spacing={2} justifyContent="flex-end">
@@ -466,15 +469,8 @@ const PostSearch = () => {
                 </Stack>
             )}
 
-            {/* Add the getRandomColor function if it's not already defined elsewhere */}
-            {/* 
-
-*/}
-
-
-
         </Container>
     );
 };
 
-export default PostSearch;
+export default  ExperSearch;

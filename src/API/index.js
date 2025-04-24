@@ -8,11 +8,13 @@ import { projectFieldApi } from './projectFieldApi';
 import { analysisResultApi } from './analysisResultApi';
 import { experimentApi } from './experimentApi';
 import { projectPost } from './projectPostApi';
+import { searchApi } from './searchApi'
 // 创建一个统一的API对象
 const api = {
   user: userApi,
   media: mediaApi,
   post: postApi,
+  search: searchApi,
   projectPost: projectPost,
   analysisResult: analysisResultApi,
   repost: repostApi,

@@ -81,7 +81,7 @@ const ProjectResult = () => {
     };
 
     //弹窗表单
-    const fetchPosts = async (postids) => {
+    const fetchPosts = async () => {
         try {
             const response = await window.$api.projectPost.postRemains({ project_id });
             setPostToAdd(response || []);

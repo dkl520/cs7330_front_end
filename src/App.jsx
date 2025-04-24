@@ -18,11 +18,13 @@ import MediaList from './pages/media/MediaList';
 import Repost from './pages/Posts/repost';
 import ProjectField from './pages/Projects/ProjectField';
 import ProjectResult from './pages/Projects/ProjectResult';
+import ExperSearch from './pages/Experiment/ExperSearch';
 import {
   Search as SearchIcon,
   AccountTree as ProjectIcon,
   Group as GroupIcon,
-  Devices as MediaIcon
+  Devices as MediaIcon,
+  Science as ScienceIcon
 } from '@mui/icons-material';
 // ... existing code ...
 
@@ -57,8 +59,8 @@ function App() {
           <Route path="/projectfield/:id" element={<ProjectField />} />
           <Route path="/projects/:id" element={<ProjectList />} />
           <Route path="/projects/:id/posts" element={<ProjectPosts />} />
-
           <Route path="/medialist" element={<MediaList />} />
+          <Route path="/expersearch/" element={<ExperSearch />} />
           <Route path="/projectresult/:id" element={<ProjectResult />} />
         </Routes>
 
@@ -68,18 +70,21 @@ function App() {
             setValue(newValue);
             switch (newValue) {
               case 0:
-                navigate('/postsearch');
+                navigate('/expersearch');
                 break;
               case 1:
-                navigate('/projectsearch');
+                navigate('/postsearch');
                 break;
               case 2:
-                navigate('/institutes');
+                navigate('/projectsearch');
                 break;
               case 3:
-                navigate('/users');
+                navigate('/institutes');
                 break;
               case 4:
+                navigate('/users');
+                break;
+              case 5:
                 navigate('/medialist');
                 break;
               default:
@@ -97,6 +102,7 @@ function App() {
             backdropFilter: 'blur(8px)'
           }}
         >
+          <BottomNavigationAction label="Experiment Search" icon={<ScienceIcon />} />
           <BottomNavigationAction label="Post Search" icon={<SearchIcon />} />
           <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
           <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
