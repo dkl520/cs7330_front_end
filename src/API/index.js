@@ -8,17 +8,20 @@ import { projectFieldApi } from './projectFieldApi';
 // import { projectPostApi } from './projectPostApi';
 import { analysisResultApi } from './analysisResultApi';
 import { experimentApi } from './experimentApi';
-
+import { projectPostApi } from './projectPostApi';
+import analysisResultApi from './analysisResultApi';
 // 创建一个统一的API对象
 const api = {
   user: userApi,
   media: mediaApi,
   post: postApi,
+  projectPost: projectPostApi,
+  analysisResult: analysisResultApi,
   repost: repostApi,
   institute: instituteApi,
   project: projectApi,
   projectField: projectFieldApi,
-//   projectPost: projectPostApi,
+  //   projectPost: projectPostApi,
   analysisResult: analysisResultApi,
   experiment: experimentApi
 };

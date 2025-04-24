@@ -15,6 +15,18 @@ export const postApi = {
   getAvailablePosts: (user_id, media_id) => {
     return axios.get(`/get_available_posts?user_id=${user_id}&media_id=${media_id}`);
   },
+  // 通过projct id 获取帖子id
+  getPorjectPost: (project_id) => {
+    return axios.get(`/project_post?project_id=${project_id}`);
+  },
+
+  getPostBatchById: (ids, ins) => {
+    return axios.get('/post_batch', { params: { post_ids: ids, in: ins } })
+  },
+
+  getOtherPostsByProjectId: (project_id) => {
+    return axios.get(`/get_available_posts?user_id=${user_id}&media_id=${media_id}`);
+  },
   // 创建帖子
   create: (data) => {
     return axios.post('/post/create', data);

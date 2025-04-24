@@ -17,6 +17,7 @@ import ProjectPosts from './pages/Projects/ProjectPosts';
 import MediaList from './pages/media/MediaList';
 import Repost from './pages/Posts/repost';
 import ProjectField from './pages/Projects/ProjectField';
+import ProjectResult from './pages/Projects/ProjectResult';
 import {
   Search as SearchIcon,
   AccountTree as ProjectIcon,
@@ -56,7 +57,9 @@ function App() {
           <Route path="/projectfield/:id" element={<ProjectField />} />
           <Route path="/projects/:id" element={<ProjectList />} />
           <Route path="/projects/:id/posts" element={<ProjectPosts />} />
+
           <Route path="/medialist" element={<MediaList />} />
+          <Route path="/projectresult/:id" element={<ProjectResult />} />
         </Routes>
 
         <BottomNavigation

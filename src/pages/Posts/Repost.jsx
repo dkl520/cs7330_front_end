@@ -53,13 +53,6 @@ export default function RepostList() {
   const userId = searchParams.get('user_id');
   const mediaId = searchParams.get('media_id');
 
-  // const emptyRepostData = {
-  //   repost_id: '',
-  //   post_id: '',
-  //   user_id: '',
-  //   repost_time: new Date().toISOString()
-  // };
-
   useEffect(() => {
     fetchReposts();
     // fetchAvailablePosts()
