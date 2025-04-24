@@ -46,7 +46,7 @@ import {
   Repeat as RepeatIcon
 } from '@mui/icons-material';
 
-// 表单组件：包含所有数据库字段，并使用 DateTimePicker 处理 DateTimeField
+// Form component: Contains all database fields and uses DateTimePicker to handle DateTimeField
 const PostForm = ({ formData, setFormData }) => {
   const theme = useTheme();
 
@@ -211,7 +211,7 @@ const PostList = () => {
       const response = await window.$api.post.getListById(userId, mediaId);
       setPosts(response || []);
     } catch (error) {
-      console.error('获取帖子列表失败:', error);
+      console.error('Failed to fetch post list:', error);
       setPosts([]);
     } finally {
       setLoading(false);
@@ -233,7 +233,7 @@ const PostList = () => {
       setFormData(emptyPostData);
       await fetchPosts();
     } catch (error) {
-      console.error('创建帖子失败:', error);
+      console.error('Failed to create post:', error);
     }
   };
 
@@ -245,7 +245,7 @@ const PostList = () => {
       setFormData(emptyPostData);
       await fetchPosts();
     } catch (error) {
-      console.error('更新帖子失败:', error);
+      console.error('Failed to update post:', error);
     }
   };
 
@@ -256,7 +256,7 @@ const PostList = () => {
       setCurrentPost(null);
       await fetchPosts();
     } catch (error) {
-      console.error('删除帖子失败:', error);
+      console.error('Failed to delete post:', error);
     }
   };
   
@@ -339,10 +339,10 @@ const PostList = () => {
           }}
         >
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            暂无帖子数据
+            No post data
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            点击"Publish Post"按钮创建新帖子
+            Click the "Publish Post" button to create a new post
           </Typography>
         </Paper>
       ) : (
@@ -411,7 +411,7 @@ const PostList = () => {
                       {post.has_multimedia && (
                         <Chip 
                           icon={<ImageIcon fontSize="small" />} 
-                          label="多媒体" 
+                          label="Multimedia" 
                           size="small"
                           sx={{ bgcolor: alpha(theme.palette.info.main, 0.1), color: theme.palette.info.main }}
                         />
@@ -421,7 +421,7 @@ const PostList = () => {
                     <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap">
                       <Chip
                         icon={<LocationIcon fontSize="small" />}
-                        label={`${post.location_city || '未知'}, ${post.location_state || '未知'}, ${post.location_country || '未知'}`}
+                        label={`${post.location_city || 'Unknown'}, ${post.location_state || 'Unknown'}, ${post.location_country || 'Unknown'}`}
                         size="small"
                         sx={{ 
                           bgcolor: alpha(theme.palette.primary.main, 0.1),
@@ -490,7 +490,7 @@ const PostList = () => {
         </Stack>
       )}
 
-      {/* 添加帖子对话框 */}
+      {/* Add post dialog */}
       <Dialog 
         open={addDialogOpen} 
         onClose={() => setAddDialogOpen(false)} 
@@ -530,7 +530,7 @@ const PostList = () => {
         </DialogActions>
       </Dialog>
 
-      {/* 编辑帖子对话框 */}
+      {/* Edit post dialog */}
       <Dialog 
         open={editDialogOpen} 
         onClose={() => setEditDialogOpen(false)} 
@@ -567,7 +567,7 @@ const PostList = () => {
         </DialogActions>
       </Dialog>
 
-      {/* 删除确认对话框 */}
+      {/* Delete confirmation dialog */}
       <Dialog 
         open={deleteDialogOpen} 
         onClose={() => setDeleteDialogOpen(false)}
@@ -577,13 +577,13 @@ const PostList = () => {
       >
         <DialogTitle sx={{ pb: 1 }}>
           <Typography variant="h5" component="div" sx={{ fontWeight: 600, color: theme.palette.error.main }}>
-            确认删除
+            Confirm Delete
           </Typography>
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ pt: 3 }}>
           <DialogContentText>
-            确定要删除这条帖子吗？此操作无法撤销。
+            Are you sure you want to delete this post? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>

@@ -55,66 +55,14 @@ const ProjectResult = () => {
 
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
-    const postAll = [
-        {
-            project_post_id: '1',
-            project_id: '1',
-            post_id: '1',
-            content: '北京欢迎你',
-            user_id: '1',
-            media_id: 'None',
-            location_city: 'Beijing',
-            location_state: '',
-            location_country: 'China',
-            has_multimedia: false,
-            likes: 12,
-            dislikes: 20,
-            post_time: '2025/4/23 12:34:29',
-
-            analysis: [
-                { fieldid: '1', fieldname: 'sentiment', fieldvalue: 'positive' },
-            ]
-        }
-    ]
+    const [postAll, setPostAll] = useState([]);
 
 
-
-
-    let postids = []
-    // useEffect(() => {
-    //     fetchPosts();
-    // }, []);
 
     useEffect(() => {
         fetchProjectPosts();
-        // fetchPosts();
-    })
-    useEffect(() => {
-        // In a real application, you would fetch this data from an API
-        const mockPosts = [
-            {
-                project_post_id: '1',
-                project_id: '1',
-                post_id: '1',
-                content: '北京欢迎你',
-                user_id: '1',
-                media_id: 'None',
-                location_city: 'Beijing',
-                location_state: '',
-                location_country: 'China',
-                has_multimedia: false,
-                likes: 12,
-                dislikes: 20,
-                post_time: '2025/4/23 12:34:29',
-                analysis: [
-                    { fieldid: '1', fieldname: 'sentiment', fieldvalue: 'positive' },
-                    { fieldid: '2', fieldname: 'topic', fieldvalue: 'tourism' }
-                ]
-            },
+    }, [])
 
-        ];
-        setPosts(mockPosts);
-    }, []);
     useEffect(() => {
         fetchFields();
     }, [project_id]);
@@ -122,6 +70,7 @@ const ProjectResult = () => {
         try {
             // setLoading(true);
             const response = await window.$api.projectField.list(project_id);
+            debugger
             setFields(response || []);
         } catch (error) {
             console.error('Failed to fetch field list:', error);
@@ -143,48 +92,12 @@ const ProjectResult = () => {
     // 项目的postids_setprojectPosts
     const fetchProjectPosts = async () => {
         try {
-            const response = await window.$api.post.getPorjectPost(project_id);
-            let project_posts = response || [];
-            postids = project_posts.map(post => post.post_id);
-            postids = [set(postids)];
-            postAll = response || [];
-            setprojectPosts(response || []);
-            await fetchAvianPosts();
-            await fetchAnalystResult();
-        } catch (error) {
-            console.error('获取可用帖子失败:', error);
-        }
-    };
-    //获取posts展示
-    const fetchAvianPosts = async () => {
-        try {
-            const response = await window.$api.post.getPostBatchById(postids, true);
+            const response = await window.$api.projectPost.listall({ project_id });
 
-            const mergedPosts = postAll.map(post => {
-                // 在 response 里找同一个 post_id
-                const extra = response.find(p => p.post_id === post.post_id);
-                return extra ? { ...post, ...extra } : post;
-            });
-            postAll = mergedPosts;
-
-            setPostsList(response || []);
+            setPostAll(response || []);
 
         } catch (error) {
             console.error('获取可用帖子失败:', error);
-        }
-    }
-    //获取分析结果
-    const fetchAnalystResult = async (post) => {
-        try {
-            // project_post_id
-            const response = await window.$api.analysisResult.list({ project_post_id });
-
-
-
-            let analysis = response || [];
-        } catch (error) {
-            console.error('Failed to fetch post list:', error);
-            // setPosts([]);
         }
     };
 
@@ -193,9 +106,6 @@ const ProjectResult = () => {
         fieldname: '',
         fieldvalue: ''
     });
-
-    // Mock data for demonstration
-
 
     const handleSaveFromDialog = async () => {
         try {
@@ -247,55 +157,12 @@ const ProjectResult = () => {
             return;
         }
 
-        // const updatedPosts = posts.map(post => {
-        //     if (post.post_id === currentPostId) {
-        //         const newFieldId = post.analysis.length > 0
-        //             ? (Math.max(...post.analysis.map(a => parseInt(a.fieldid))) + 1).toString()
-        //             : '1';
-
-        //         return {
-        //             ...post,
-        //             analysis: [
-        //                 ...post.analysis,
-        //                 {
-        //                     fieldid: newFieldId,
-        //                     fieldname: formData.fieldname,
-        //                     fieldvalue: formData.fieldvalue
-        //                 }
-        //             ]
-        //         };
-        //     }
-        //     return post;
-        // });
-
         setPosts(updatedPosts);
         handleCloseDialog();
     };
 
     const navigateToProjectField = () => {
-        navigate('/projectfield');
-    };
-
-    const handleAddPost = () => {
-        // This would typically open a form to add a new post
-        // For demonstration, we'll just add a dummy post
-        const newPostId = (Math.max(...posts.map(p => parseInt(p.post_id))) + 1).toString();
-        const newPost = {
-            post_id: newPostId,
-            content: 'New Post',
-            user_id: '1',
-            media_id: '',
-            location_city: '',
-            location_state: '',
-            location_country: '',
-            has_multimedia: false,
-            likes: 0,
-            dislikes: 0,
-            post_time: new Date().toISOString(),
-            analysis: []
-        };
-
-        setPosts([...posts, newPost]);
+        navigate(`/projectfield/${project_id}`)
     };
 
     // Format the location string
@@ -321,10 +188,10 @@ const ProjectResult = () => {
             >
                 <Box>
                     <Typography variant="h4" gutterBottom fontWeight="500">
-                        结果分析
+                        Result Analysis
                     </Typography>
                     <Typography variant="subtitle1" color="text.secondary">
-                        查看并管理所有帖子分析结果
+                        View and manage all post analysis results
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 2 }}>
@@ -334,11 +201,10 @@ const ProjectResult = () => {
                             startIcon={<RefreshIcon />}
                             onClick={() => setPosts([...posts])} // Mock refresh
                         >
-                            刷新
+                            Refresh
                         </Button>
                     </div>
                     <div>
-
                         <Button
                             variant="contained"
                             startIcon={<AddIcon />}
@@ -349,7 +215,7 @@ const ProjectResult = () => {
                             }}
                             disableElevation
                         >
-                            添加帖子
+                            Add Post
                         </Button>
                     </div>
                     <div>
@@ -359,30 +225,317 @@ const ProjectResult = () => {
                             onClick={navigateToProjectField}
                             disableElevation
                         >
-                            项目字段
+                            Project Fields
                         </Button>
                     </div>
                 </Box>
             </Paper>
 
             {/* Posts list as accordions */}
+            <Paper
+                elevation={3}
+                sx={{ borderRadius: 3, overflow: 'auto', maxHeight: 'calc(100vh - 250px)' }}
+            >
+                {postAll.length === 0 ? (
+                    <Box p={3} sx={{ textAlign: 'center' }}>
+                        <Typography color="text.secondary">No post data available</Typography>
+                    </Box>
+                ) : (
+                    postAll.map((post) => (
+                        <Accordion key={post.post_id} disableGutters square>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 3 }}>
+                                <Stack direction="row" spacing={1} alignItems="center" sx={{ flexGrow: 1 }}>
+                                    <Typography variant="subtitle1">
+                                        Post ID: {post.post_id}
+                                    </Typography>
+                                    {/* <Chip
+                        label={`Content: ${post.content.length > 20 ? post.content.substring(0, 20) + '...' : post.content}`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      /> */}
+                                    <Chip
+                                        label={`User ID: ${post.user_id}`}
+                                        size="small"
+                                        color="secondary"
+                                        variant="outlined"
+                                    />
+                                    <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
+                                        Post Time: {new Date(post.post_time).toLocaleString()}
+                                    </Typography>
+                                </Stack>
+                            </AccordionSummary>
+                            <AccordionDetails sx={{ bgcolor: 'grey.50', p: 0 }}>
+                                <Box sx={{ p: 3 }}>
+                                    <Paper
+                                        elevation={0}
+                                        sx={{
+                                            p: 2,
+                                            borderRadius: 2,
+                                            border: '1px solid',
+                                            borderColor: 'divider',
+                                            bgcolor: 'background.paper'
+                                        }}
+                                    >
+                                        {/* Post Content Section */}
+                                        <Box sx={{ mb: 3 }}>
+                                            <Typography
+                                                variant="subtitle1"
+                                                gutterBottom
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    color: 'text.primary',
+                                                    fontWeight: 500
+                                                }}
+                                            >
+                                                <ArticleIcon sx={{ mr: 1, fontSize: 20, color: 'primary.main' }} />
+                                                Post Content
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                sx={{
+                                                    p: 2,
+                                                    borderRadius: 1,
+                                                    bgcolor: 'background.default',
+                                                    border: '1px solid',
+                                                    borderColor: 'divider'
+                                                }}
+                                            >
+                                                {post.content}
+                                            </Typography>
+                                        </Box>
 
+                                        <Grid container spacing={3}>
+                                            {/* Left Column */}
+                                            <Grid item xs={12} md={6}>
+                                                <Stack spacing={2}>
+                                                    {/* Post ID */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                            sx={{ display: 'flex', alignItems: 'center' }}
+                                                        >
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Post ID:</Box>
+                                                            {post.post_id}
+                                                        </Typography>
+                                                    </Box>
+
+                                                    {/* User Info */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                            sx={{ display: 'flex', alignItems: 'center' }}
+                                                        >
+                                                            <PersonIcon sx={{ mr: 1, fontSize: 16, color: 'secondary.main' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>User ID:</Box>
+                                                            {post.user_id}
+                                                        </Typography>
+                                                    </Box>
+
+                                                    {/* Media */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                            sx={{ display: 'flex', alignItems: 'center' }}
+                                                        >
+                                                            <ImageIcon sx={{ mr: 1, fontSize: 16, color: post.has_multimedia ? 'success.main' : 'text.disabled' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Media:</Box>
+                                                            {post.has_multimedia ? (
+                                                                <Chip
+                                                                    label="Contains multimedia"
+                                                                    size="small"
+                                                                    color="success"
+                                                                    variant="outlined"
+                                                                    sx={{ height: 20, fontSize: '0.75rem' }}
+                                                                />
+                                                            ) : (
+                                                                <Chip
+                                                                    label="No multimedia"
+                                                                    size="small"
+                                                                    color="default"
+                                                                    variant="outlined"
+                                                                    sx={{ height: 20, fontSize: '0.75rem' }}
+                                                                />
+                                                            )}
+                                                        </Typography>
+                                                    </Box>
+
+                                                    {/* Location */}
+                                                    <Box>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                                                            <LocationIcon sx={{ mr: 1, fontSize: 16, color: 'info.main' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Location:</Box>
+                                                            {formatLocation(
+                                                                post.location_city,
+                                                                post.location_state,
+                                                                post.location_country
+                                                            )}
+                                                        </Box>
+                                                    </Box>
+                                                </Stack>
+                                            </Grid>
+
+                                            {/* Right Column */}
+                                            <Grid item xs={12} md={6}>
+                                                <Stack spacing={2}>
+                                                    {/* Post Time */}
+                                                    <Box>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                                                            <AccessTimeIcon sx={{ mr: 1, fontSize: 16, color: 'warning.main' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Post Time:</Box>
+                                                            {new Date(post.post_time).toLocaleString()}
+                                                        </Box>
+                                                    </Box>
+
+                                                    {/* Engagement Stats */}
+                                                    <Box sx={{ display: 'flex', gap: 3 }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                                                            <ThumbUpIcon sx={{ mr: 1, fontSize: 16, color: 'success.main' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Likes:</Box>
+                                                            {post.likes}
+                                                        </Box>
+
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                                                            <ThumbDownIcon sx={{ mr: 1, fontSize: 16, color: 'error.main' }} />
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Dislikes:</Box>
+                                                            {post.dislikes}
+                                                        </Box>
+                                                    </Box>
+
+                                                    {/* Media ID */}
+                                                    <Box>
+                                                        <Typography
+                                                            variant="body2"
+                                                            color="text.secondary"
+                                                            sx={{ display: 'flex', alignItems: 'center' }}
+                                                        >
+                                                            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Media ID:</Box>
+                                                            {post.media_id || 'None'}
+                                                        </Typography>
+                                                    </Box>
+                                                </Stack>
+                                            </Grid>
+                                        </Grid>
+
+                                        {/* Analysis Results Section */}
+                                        <Box sx={{ mt: 4 }}>
+                                            <Typography
+                                                variant="subtitle1"
+                                                gutterBottom
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    color: 'text.primary',
+                                                    fontWeight: 500,
+                                                    borderBottom: '1px solid',
+                                                    borderColor: 'divider',
+                                                    pb: 1
+                                                }}
+                                            >
+                                                <AnalyticsIcon sx={{ mr: 1, fontSize: 20, color: 'primary.main' }} />
+                                                Analysis Results
+                                            </Typography>
+
+                                            {post.analysis.length > 0 ? (
+                                                <Box sx={{ mt: 2 }}>
+                                                    <Grid container sx={{ fontWeight: 'bold', mb: 1, bgcolor: 'grey.100', p: 1, borderRadius: 1 }}>
+                                                        <Grid item xs={2}>
+                                                            <Typography variant="subtitle2">Field ID</Typography>
+                                                        </Grid>
+                                                        <Grid item xs={4}>
+                                                            <Typography variant="subtitle2">Field Name</Typography>
+                                                        </Grid>
+                                                        <Grid item xs={6}>
+                                                            <Typography variant="subtitle2">Field Value</Typography>
+                                                        </Grid>
+                                                    </Grid>
+
+                                                    {post.analysis.map((analysis) => (
+                                                        <Grid
+                                                            container
+                                                            key={analysis.fieldid}
+                                                            sx={{
+                                                                py: 1.5,
+                                                                px: 1,
+                                                                borderBottom: '1px solid',
+                                                                borderColor: 'divider',
+                                                                '&:hover': { bgcolor: 'action.hover' }
+                                                            }}
+                                                        >
+                                                            <Grid item xs={2}>
+                                                                <Chip
+                                                                    label={analysis.fieldid}
+                                                                    size="small"
+                                                                    color="primary"
+                                                                    sx={{ fontWeight: 'bold' }}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item xs={4}>
+                                                                <Typography variant="body2">{analysis.fieldname}</Typography>
+                                                            </Grid>
+                                                            <Grid item xs={6}>
+                                                                <Typography variant="body2">{analysis.fieldvalue}</Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                    ))}
+                                                </Box>
+                                            ) : (
+                                                <Box sx={{ textAlign: 'center', p: 4, bgcolor: 'grey.50', borderRadius: 1 }}>
+                                                    <Typography color="text.secondary" gutterBottom>
+                                                        No analysis results available
+                                                    </Typography>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleOpenDialog(post.post_id)}
+                                                        startIcon={<AddIcon />}
+                                                        sx={{ mt: 1 }}
+                                                    >
+                                                        Please add analysis results
+                                                    </Button>
+                                                </Box>
+                                            )}
+
+                                            {post.analysis.length > 0 && (
+                                                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        onClick={() => handleOpenDialog(post.post_id)}
+                                                        startIcon={<AddIcon />}
+                                                    >
+                                                        Add more analysis
+                                                    </Button>
+                                                </Box>
+                                            )}
+                                        </Box>
+                                    </Paper>
+                                </Box>
+                            </AccordionDetails>
+                        </Accordion>
+                    ))
+                )}
+            </Paper>
 
             <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} fullWidth maxWidth="lg">
-                <DialogTitle>批量转发</DialogTitle>
+                <DialogTitle>Add Post</DialogTitle>
                 <DialogContent dividers>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>选择</TableCell>
-                                <TableCell>content</TableCell>
-                                <TableCell>location_city</TableCell>
-                                <TableCell>location_state</TableCell>
-                                <TableCell>location_country</TableCell>
-                                <TableCell>has_multimedia</TableCell>
-                                <TableCell>likes</TableCell>
-                                <TableCell>dislikes</TableCell>
-                                <TableCell>post_time</TableCell>
+                                <TableCell>Select</TableCell>
+                                <TableCell>Content</TableCell>
+                                <TableCell>City</TableCell>
+                                <TableCell>State</TableCell>
+                                <TableCell>Country</TableCell>
+                                <TableCell>Has Multimedia</TableCell>
+                                <TableCell>Likes</TableCell>
+                                <TableCell>Dislikes</TableCell>
+                                <TableCell>Post Time</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -408,9 +561,9 @@ const ProjectResult = () => {
                     </Table>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
                     <Button variant="contained" disabled={selectedIds.length === 0} onClick={handleSaveFromDialog}>
-                        保存
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -419,19 +572,19 @@ const ProjectResult = () => {
                 <DialogTitle sx={{ borderBottom: '1px solid', borderColor: 'divider', pb: 2 }}>
                     <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center' }}>
                         <AnalyticsIcon sx={{ mr: 1, color: 'primary.main' }} />
-                        添加分析结果
+                        Add Analysis Results
                     </Typography>
                 </DialogTitle>
                 <DialogContent sx={{ mt: 2 }}>
                     <Box sx={{ mt: 1 }}>
                         <FormControl fullWidth sx={{ mb: 3 }}>
-                            <InputLabel id="fieldname-label">字段名称</InputLabel>
+                            <InputLabel id="fieldname-label">Field Name</InputLabel>
                             <Select
                                 labelId="fieldname-label"
                                 id="fieldname"
                                 name="fieldname"
                                 value={formData.fieldname}
-                                label="字段名称"
+                                label="Field Name"
                                 onChange={handleInputChange}
                             >
                                 {fields.map((option) => (
@@ -443,7 +596,7 @@ const ProjectResult = () => {
                         </FormControl>
                         <TextField
                             fullWidth
-                            label="字段值"
+                            label="Field Value"
                             name="fieldvalue"
                             value={formData.fieldvalue}
                             onChange={handleInputChange}
@@ -458,7 +611,7 @@ const ProjectResult = () => {
                         onClick={handleCloseDialog}
                         variant="outlined"
                     >
-                        取消
+                        Cancel
                     </Button>
                     <Button
                         onClick={handleAddAnalysis}
@@ -466,7 +619,7 @@ const ProjectResult = () => {
                         color="primary"
                         disabled={!formData.fieldname || !formData.fieldvalue}
                     >
-                        添加
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>

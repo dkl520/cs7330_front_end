@@ -7,7 +7,7 @@ import { projectApi } from './projectApi';
 import { projectFieldApi } from './projectFieldApi';
 import { analysisResultApi } from './analysisResultApi';
 import { experimentApi } from './experimentApi';
-import { projectPost } from './projectPost';
+import { projectPost } from './projectPostApi';
 // 创建一个统一的API对象
 const api = {
   user: userApi,

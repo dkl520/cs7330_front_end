@@ -11,9 +11,18 @@ export const projectPost = {
     bulkProjectPost: (data) => {
         return axios.post(`/project_post/bulk_project_post`, data);
     },
+    
+    
+    listall: (params) => {
+        return axios.get(`/project_post/listall`,  { params });
+    },
+
+
     detail: (id) => {
         return axios.get(`/post/${id}`);
     },
+
+
 
     // 更新帖子
     update: (id, data) => {
