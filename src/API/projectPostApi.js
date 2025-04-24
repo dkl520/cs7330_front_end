@@ -7,7 +7,6 @@ export const projectPost = {
         return axios.post('/project_post/create', data);
     },
 
-    // 获取帖子详情
     bulkProjectPost: (data) => {
         return axios.post(`/project_post/bulk_project_post`, data);
     },

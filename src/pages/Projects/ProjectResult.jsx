@@ -23,7 +23,13 @@ import {
     AccordionSummary,
     AccordionDetails,
     Grid,
-    Divider
+    Divider,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Checkbox
 } from '@mui/material';
 import {
     Add as AddIcon,
@@ -43,21 +49,15 @@ const ProjectResult = () => {
     const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
     const [open, setOpen] = useState(false);
-    const [currentPostId, setCurrentPostId] = useState(null);
+    const [currentProjectPostId, setCurrentProjectPostId] = useState(null);
     const { id: project_id } = useParams();
     const [fields, setFields] = useState([]);
-    const [availablePosts, setAvailablePosts] = useState([]);
 
     const [postToAdd, setPostToAdd] = useState([]);  //添加
-
-    const [postsList, setPostsList] = useState([]); //posts展示
-    const [projectPosts, setprojectPosts] = useState([]); //项目的postids
 
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
     const [postAll, setPostAll] = useState([]);
-
-
 
     useEffect(() => {
         fetchProjectPosts();
@@ -66,11 +66,11 @@ const ProjectResult = () => {
     useEffect(() => {
         fetchFields();
     }, [project_id]);
+    
     const fetchFields = async () => {
         try {
             // setLoading(true);
             const response = await window.$api.projectField.list(project_id);
-            debugger
             setFields(response || []);
         } catch (error) {
             console.error('Failed to fetch field list:', error);
@@ -79,6 +79,7 @@ const ProjectResult = () => {
             // setLoading(false);
         }
     };
+    
     //弹窗表单
     const fetchPosts = async (postids) => {
         try {
@@ -89,36 +90,30 @@ const ProjectResult = () => {
             // setPosts([]);
         }
     };
-    // 项目的postids_setprojectPosts
+    
     const fetchProjectPosts = async () => {
         try {
             const response = await window.$api.projectPost.listall({ project_id });
-
             setPostAll(response || []);
-
         } catch (error) {
             console.error('获取可用帖子失败:', error);
         }
     };
 
-
     const [formData, setFormData] = useState({
-        fieldname: '',
-        fieldvalue: ''
+        field_id: '',
+        field_name: '',
+        value: ''
     });
 
     const handleSaveFromDialog = async () => {
         try {
-            // 准备批量转发的数据
             const bulkProjectsData = {
                 project_id: project_id, // 使用当前用户ID
                 post_ids: selectedIds // 已选择的帖子ID数组
             };
-            // 调用批量转发API
             await window.$api.projectPost.bulkProjectPost(bulkProjectsData);
-            // 重新获取转发列表
             await fetchProjectPosts();
-            // 清理状态
             setSelectedIds([]);
             setAddDialogOpen(false);
         } catch (error) {
@@ -126,8 +121,8 @@ const ProjectResult = () => {
         }
     };
 
-    const handleOpenDialog = (postId) => {
-        setCurrentPostId(postId);
+    const handleOpenDialog = (project_post_id) => {
+        setCurrentProjectPostId(project_post_id);
         setOpen(true);
     };
 
@@ -136,28 +131,39 @@ const ProjectResult = () => {
             prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
         );
     };
+    
     const handleCloseDialog = () => {
         setOpen(false);
         setFormData({
-            fieldname: '',
-            fieldvalue: ''
+            field_id: '',
+            field_name: '',
+            value: ''
         });
     };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value || '' // 确保value永远不会是undefined
+        }));
     };
 
-    const handleAddAnalysis = () => {
-        if (!formData.fieldname || !formData.fieldvalue) {
+    const handleAddAnalysis = async () => {
+        if (!formData.field_id || !formData.value) {
             return;
         }
-
-        setPosts(updatedPosts);
+        let bulkedData = {
+            project_post_id: currentProjectPostId,
+            field_id: formData.field_id,
+            value: formData.value
+        }
+        try {
+            await window.$api.analysisResult.create(bulkedData);
+        } catch (error) {
+            console.error('获取可用帖子失败:', error);
+        }
+        await fetchProjectPosts();
         handleCloseDialog();
     };
 
@@ -165,7 +171,6 @@ const ProjectResult = () => {
         navigate(`/projectfield/${project_id}`)
     };
 
-    // Format the location string
     const formatLocation = (city, state, country) => {
         const parts = [city, state, country].filter(Boolean);
         return parts.length > 0 ? parts.join(', ') : '未知';
@@ -243,17 +248,22 @@ const ProjectResult = () => {
                 ) : (
                     postAll.map((post) => (
                         <Accordion key={post.post_id} disableGutters square>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 3 }}>
+                            {/* FIX: Remove the expandIcon from AccordionSummary and add it differently */}
+                            <AccordionSummary 
+                                // expandIcon has been removed from here
+                                sx={{ 
+                                    px: 3,
+                                    // Add a container for our custom expand icon
+                                    '& .MuiAccordionSummary-content': {
+                                        justifyContent: 'space-between',
+                                        width: '100%'
+                                    }
+                                }}
+                            >
                                 <Stack direction="row" spacing={1} alignItems="center" sx={{ flexGrow: 1 }}>
                                     <Typography variant="subtitle1">
                                         Post ID: {post.post_id}
                                     </Typography>
-                                    {/* <Chip
-                        label={`Content: ${post.content.length > 20 ? post.content.substring(0, 20) + '...' : post.content}`}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      /> */}
                                     <Chip
                                         label={`User ID: ${post.user_id}`}
                                         size="small"
@@ -264,6 +274,10 @@ const ProjectResult = () => {
                                         Post Time: {new Date(post.post_time).toLocaleString()}
                                     </Typography>
                                 </Stack>
+                                {/* Add expand icon as a separate element that's not a button */}
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <ExpandMoreIcon />
+                                </Box>
                             </AccordionSummary>
                             <AccordionDetails sx={{ bgcolor: 'grey.50', p: 0 }}>
                                 <Box sx={{ p: 3 }}>
@@ -442,43 +456,39 @@ const ProjectResult = () => {
 
                                             {post.analysis.length > 0 ? (
                                                 <Box sx={{ mt: 2 }}>
-                                                    <Grid container sx={{ fontWeight: 'bold', mb: 1, bgcolor: 'grey.100', p: 1, borderRadius: 1 }}>
-                                                        <Grid item xs={2}>
-                                                            <Typography variant="subtitle2">Field ID</Typography>
-                                                        </Grid>
-                                                        <Grid item xs={4}>
-                                                            <Typography variant="subtitle2">Field Name</Typography>
-                                                        </Grid>
-                                                        <Grid item xs={6}>
-                                                            <Typography variant="subtitle2">Field Value</Typography>
-                                                        </Grid>
-                                                    </Grid>
 
                                                     {post.analysis.map((analysis) => (
                                                         <Grid
                                                             container
-                                                            key={analysis.fieldid}
+                                                            key={analysis.field_id}
                                                             sx={{
                                                                 py: 1.5,
                                                                 px: 1,
                                                                 borderBottom: '1px solid',
                                                                 borderColor: 'divider',
-                                                                '&:hover': { bgcolor: 'action.hover' }
+                                                                '&:hover': { bgcolor: 'action.hover' },
+                                                                alignItems: 'center' // 添加垂直居中对齐
                                                             }}
                                                         >
-                                                            <Grid item xs={2}>
+                                                            <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center' }}>
                                                                 <Chip
-                                                                    label={analysis.fieldid}
+                                                                    label={analysis.field_id}
                                                                     size="small"
                                                                     color="primary"
-                                                                    sx={{ fontWeight: 'bold' }}
+                                                                    sx={{
+                                                                        fontWeight: 'bold',
+                                                                        mr: 2,  // 添加右侧边距
+                                                                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',  // 添加轻微阴影效果
+                                                                        border: '1px solid',  // 添加边框
+                                                                        borderColor: 'primary.light'  // 边框颜色
+                                                                    }}
                                                                 />
                                                             </Grid>
-                                                            <Grid item xs={4}>
-                                                                <Typography variant="body2">{analysis.fieldname}</Typography>
+                                                            <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Typography variant="body2">{analysis.field_name}： </Typography>
                                                             </Grid>
-                                                            <Grid item xs={6}>
-                                                                <Typography variant="body2">{analysis.fieldvalue}</Typography>
+                                                            <Grid item xs={6} sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Typography variant="body2">{analysis.value}</Typography>
                                                             </Grid>
                                                         </Grid>
                                                     ))}
@@ -491,7 +501,7 @@ const ProjectResult = () => {
                                                     <Button
                                                         variant="contained"
                                                         color="primary"
-                                                        onClick={() => handleOpenDialog(post.post_id)}
+                                                        onClick={() => handleOpenDialog(post.project_post_id)}
                                                         startIcon={<AddIcon />}
                                                         sx={{ mt: 1 }}
                                                     >
@@ -505,7 +515,7 @@ const ProjectResult = () => {
                                                     <Button
                                                         variant="contained"
                                                         color="primary"
-                                                        onClick={() => handleOpenDialog(post.post_id)}
+                                                        onClick={() => handleOpenDialog(post.project_post_id)}
                                                         startIcon={<AddIcon />}
                                                     >
                                                         Add more analysis
@@ -582,8 +592,8 @@ const ProjectResult = () => {
                             <Select
                                 labelId="fieldname-label"
                                 id="fieldname"
-                                name="fieldname"
-                                value={formData.fieldname}
+                                name="field_id"
+                                value={formData.field_id}
                                 label="Field Name"
                                 onChange={handleInputChange}
                             >
@@ -597,8 +607,8 @@ const ProjectResult = () => {
                         <TextField
                             fullWidth
                             label="Field Value"
-                            name="fieldvalue"
-                            value={formData.fieldvalue}
+                            name="value"
+                            value={formData.value}
                             onChange={handleInputChange}
                             variant="outlined"
                             multiline
@@ -617,7 +627,7 @@ const ProjectResult = () => {
                         onClick={handleAddAnalysis}
                         variant="contained"
                         color="primary"
-                        disabled={!formData.fieldname || !formData.fieldvalue}
+                        disabled={!formData.field_id || !formData.value}
                     >
                         Add
                     </Button>

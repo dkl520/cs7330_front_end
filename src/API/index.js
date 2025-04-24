@@ -19,7 +19,6 @@ const api = {
   institute: instituteApi,
   project: projectApi,
   projectField: projectFieldApi,
-  analysisResult: analysisResultApi,
   experiment: experimentApi
 };
 
