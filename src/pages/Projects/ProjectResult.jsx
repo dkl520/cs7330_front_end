@@ -66,7 +66,7 @@ const ProjectResult = () => {
     useEffect(() => {
         fetchFields();
     }, [project_id]);
-    
+
     const fetchFields = async () => {
         try {
             // setLoading(true);
@@ -79,18 +79,18 @@ const ProjectResult = () => {
             // setLoading(false);
         }
     };
-    
+
     //弹窗表单
     const fetchPosts = async (postids) => {
         try {
-            const response = await window.$api.post.list();
+            const response = await window.$api.projectPost.postRemains({ project_id });
             setPostToAdd(response || []);
         } catch (error) {
             console.error('Failed to fetch post list:', error);
             // setPosts([]);
         }
     };
-    
+
     const fetchProjectPosts = async () => {
         try {
             const response = await window.$api.projectPost.listall({ project_id });
@@ -131,7 +131,7 @@ const ProjectResult = () => {
             prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
         );
     };
-    
+
     const handleCloseDialog = () => {
         setOpen(false);
         setFormData({
@@ -249,9 +249,9 @@ const ProjectResult = () => {
                     postAll.map((post) => (
                         <Accordion key={post.post_id} disableGutters square>
                             {/* FIX: Remove the expandIcon from AccordionSummary and add it differently */}
-                            <AccordionSummary 
+                            <AccordionSummary
                                 // expandIcon has been removed from here
-                                sx={{ 
+                                sx={{
                                     px: 3,
                                     // Add a container for our custom expand icon
                                     '& .MuiAccordionSummary-content': {

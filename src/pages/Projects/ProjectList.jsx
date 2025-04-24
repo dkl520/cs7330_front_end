@@ -210,7 +210,6 @@ const ProjectList = () => {
                             <Typography>暂无项目数据</Typography>
                         </ListItem>
                     ) : (
-                        // onClick={() => navigate(`/projectfield/${project.project_id}`)}
                         projects.map((project, index) => (
                             <ListItem
                                 onClick={() => navigate(`/projectresult/${project.project_id}`)}

@@ -10,10 +10,14 @@ export const projectPost = {
     bulkProjectPost: (data) => {
         return axios.post(`/project_post/bulk_project_post`, data);
     },
-    
-    
+
+    postRemains: (params) => {
+        return axios.get(`/project_post/remains`, { params });
+    },
+
+
     listall: (params) => {
-        return axios.get(`/project_post/listall`,  { params });
+        return axios.get(`/project_post/listall`, { params });
     },
 
 
