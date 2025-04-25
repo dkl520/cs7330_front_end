@@ -135,7 +135,7 @@ const ProjectList = () => {
     const fetchProjects = async () => {
         try {
             setLoading(true);
-            const response = await window.$api.project.list({institute_id: id});
+            const response = await window.$api.project.list({ institute_id: id });
             setProjects(response || []);
         } catch (error) {
             console.error('获取项目列表失败:', error);
@@ -285,51 +285,52 @@ const ProjectList = () => {
                 </List>
             </Paper>
 
-            {/* 添加项目对话框 */}
+            {/* Add Project Dialog */}
             <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle component="div">添加新项目</DialogTitle>
+                <DialogTitle component="div">Add New Project</DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ mb: 2 }}>请填写项目基本信息</DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>Please fill in the basic project information</DialogContentText>
                     <ProjectForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleAdd} variant="contained">
-                        添加
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑项目对话框 */}
+            {/* Edit Project Dialog */}
             <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle component="div">编辑项目</DialogTitle>
+                <DialogTitle component="div">Edit Project</DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ mb: 2 }}>请修改项目信息</DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>Please modify the project information</DialogContentText>
                     <ProjectForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setEditDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setEditDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleEdit} variant="contained">
-                        保存
+                        Save
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 删除确认对话框 */}
+            {/* Delete Confirmation Dialog */}
             <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-                <DialogTitle component="div">确认删除</DialogTitle>
+                <DialogTitle component="div">Confirm Deletion</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        确定要删除项目 "{currentProject?.name}" 吗？此操作不可撤销。
+                        Are you sure you want to delete the project "{currentProject?.name}"? This action cannot be undone.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleDelete} color="error" variant="contained">
-                        删除
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>
+
         </Container>
     );
 };

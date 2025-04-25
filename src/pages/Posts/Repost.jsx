@@ -213,28 +213,27 @@ export default function RepostList() {
           reposts.map((repost, index) => {
             const original = originalMap[repost.post_id];
             if (!original) return null;
-
             return (
               <Accordion key={repost.repost_id} disableGutters square>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} sx={{ px: 3 }}>
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ flexGrow: 1 }}>
                     <Typography variant="subtitle1">
-                      转发ID: {repost.repost_id}
+                      Repost ID: {repost.repost_id}
                     </Typography>
                     <Chip
-                      label={`原帖ID: ${repost.post_id}`}
+                      label={`Original Post ID: ${repost.post_id}`}
                       size="small"
                       color="primary"
                       variant="outlined"
                     />
                     <Chip
-                      label={`用户ID: ${repost.user_id}`}
+                      label={`User ID: ${repost.user_id}`}
                       size="small"
                       color="secondary"
                       variant="outlined"
                     />
                     <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
-                      转发时间: {new Date(repost.repost_time).toLocaleString()}
+                      Repost Time: {new Date(repost.repost_time).toLocaleString()}
                     </Typography>
                   </Stack>
                   <IconButton
@@ -258,7 +257,7 @@ export default function RepostList() {
                           borderRadius: 2,
                           border: '1px solid',
                           borderColor: 'divider',
-                          bgcolor: 'background.paper'
+                          bgcolor: 'background.paper',
                         }}
                       >
                         {/* Post Content Section */}
@@ -270,11 +269,11 @@ export default function RepostList() {
                               display: 'flex',
                               alignItems: 'center',
                               color: 'text.primary',
-                              fontWeight: 500
+                              fontWeight: 500,
                             }}
                           >
                             <ArticleIcon sx={{ mr: 1, fontSize: 20, color: 'primary.main' }} />
-                            帖子内容
+                            Post Content
                           </Typography>
                           <Typography
                             variant="body1"
@@ -283,7 +282,7 @@ export default function RepostList() {
                               borderRadius: 1,
                               bgcolor: 'background.default',
                               border: '1px solid',
-                              borderColor: 'divider'
+                              borderColor: 'divider',
                             }}
                           >
                             {original.content}
@@ -301,7 +300,7 @@ export default function RepostList() {
                                   color="text.secondary"
                                   sx={{ display: 'flex', alignItems: 'center' }}
                                 >
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>帖子ID:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Post ID:</Box>
                                   {original.post_id}
                                 </Typography>
                               </Box>
@@ -314,7 +313,7 @@ export default function RepostList() {
                                   sx={{ display: 'flex', alignItems: 'center' }}
                                 >
                                   <PersonIcon sx={{ mr: 1, fontSize: 16, color: 'secondary.main' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>用户ID:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>User ID:</Box>
                                   {original.user_id}
                                 </Typography>
                               </Box>
@@ -327,10 +326,10 @@ export default function RepostList() {
                                   sx={{ display: 'flex', alignItems: 'center' }}
                                 >
                                   <ImageIcon sx={{ mr: 1, fontSize: 16, color: original.has_multimedia ? 'success.main' : 'text.disabled' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>媒体:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Media:</Box>
                                   {original.has_multimedia ? (
                                     <Chip
-                                      label="包含多媒体"
+                                      label="Multimedia Included"
                                       size="small"
                                       color="success"
                                       variant="outlined"
@@ -338,7 +337,7 @@ export default function RepostList() {
                                     />
                                   ) : (
                                     <Chip
-                                      label="无多媒体"
+                                      label="No Multimedia"
                                       size="small"
                                       color="default"
                                       variant="outlined"
@@ -350,10 +349,9 @@ export default function RepostList() {
 
                               {/* Location */}
                               <Box>
-                                {/* Fixed div inside p issue by changing from Typography component="span" to div */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
                                   <LocationIcon sx={{ mr: 1, fontSize: 16, color: 'info.main' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>位置:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Location:</Box>
                                   {formatLocation(
                                     original.location_city,
                                     original.location_state,
@@ -369,26 +367,24 @@ export default function RepostList() {
                             <Stack spacing={2}>
                               {/* Post Time */}
                               <Box>
-                                {/* Fixed div inside p issue by changing from Typography component="span" to div */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
                                   <AccessTimeIcon sx={{ mr: 1, fontSize: 16, color: 'warning.main' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>发布时间:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Post Time:</Box>
                                   {new Date(original.post_time).toLocaleString()}
                                 </Box>
                               </Box>
 
                               {/* Engagement Stats */}
                               <Box sx={{ display: 'flex', gap: 3 }}>
-                                {/* Fixed div inside p issue by changing Typography components */}
                                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
                                   <ThumbUpIcon sx={{ mr: 1, fontSize: 16, color: 'success.main' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>点赞:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Likes:</Box>
                                   {original.likes}
                                 </Box>
 
                                 <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
                                   <ThumbDownIcon sx={{ mr: 1, fontSize: 16, color: 'error.main' }} />
-                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>踩:</Box>
+                                  <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>Dislikes:</Box>
                                   {original.dislikes}
                                 </Box>
                               </Box>
@@ -402,7 +398,7 @@ export default function RepostList() {
                   ) : (
                     <Box sx={{ p: 3 }}>
                       <Typography variant="body2" color="text.secondary">
-                        未找到原帖信息
+                        Original post information not found
                       </Typography>
                     </Box>
                   )}
@@ -413,22 +409,21 @@ export default function RepostList() {
         )}
       </Paper>
 
-      {/** Add dialog with table **/}
       <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} fullWidth maxWidth="lg">
-        <DialogTitle>批量转发</DialogTitle>
+        <DialogTitle>Batch Repost</DialogTitle>
         <DialogContent dividers>
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>选择</TableCell>
-                <TableCell>content</TableCell>
-                <TableCell>location_city</TableCell>
-                <TableCell>location_state</TableCell>
-                <TableCell>location_country</TableCell>
-                <TableCell>has_multimedia</TableCell>
-                <TableCell>likes</TableCell>
-                <TableCell>dislikes</TableCell>
-                <TableCell>post_time</TableCell>
+                <TableCell>Select</TableCell>
+                <TableCell>Content</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell>State</TableCell>
+                <TableCell>Country</TableCell>
+                <TableCell>Has Multimedia</TableCell>
+                <TableCell>Likes</TableCell>
+                <TableCell>Dislikes</TableCell>
+                <TableCell>Post Time</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -454,26 +449,26 @@ export default function RepostList() {
           </Table>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
+          <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" disabled={selectedIds.length === 0} onClick={handleSaveFromDialog}>
-            保存
+            Save
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/** Delete confirmation **/}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>确认删除</DialogTitle>
+        <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <Typography variant="body2">确定要删除这条转发记录吗？此操作无法撤销。</Typography>
+          <Typography variant="body2">Are you sure you want to delete this repost record? This action cannot be undone.</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>取消</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
           <Button color="error" variant="contained" onClick={handleDelete}>
-            删除
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
+
     </Container>
   );
 }

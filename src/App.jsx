@@ -4,16 +4,15 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { useState } from 'react';
 import InstituteList from './pages/Institutes/InstituteList';
-import InstituteDetail from './pages/Institutes/InstituteDetail';
-import InstituteForm from './pages/Institutes/InstituteForm';
+// import InstituteDetail from './pages/Institutes/InstituteDetail';
+// import InstituteForm from './pages/Institutes/InstituteForm';
+// import ProjectPosts from './pages/Projects/ProjectPosts';
 import UserList from './pages/Users/UserList';
 import PostList from './pages/Posts/PostList';
 import ProjectList from './pages/Projects/ProjectList';
-import NavBar from './components/NavBar';
 import SchoolIcon from '@mui/icons-material/School';
 import PostSearch from './pages/Posts/PostSearch';
 import ProjectSearch from './pages/Projects/ProjectSearch';
-import ProjectPosts from './pages/Projects/ProjectPosts';
 import MediaList from './pages/media/MediaList';
 import Repost from './pages/Posts/repost';
 import ProjectField from './pages/Projects/ProjectField';
@@ -26,7 +25,6 @@ import {
   Devices as MediaIcon,
   Science as ScienceIcon
 } from '@mui/icons-material';
-// ... existing code ...
 
 function App() {
   const [value, setValue] = useState(0);
@@ -51,14 +49,14 @@ function App() {
           <Route path="/" element={<PostSearch />} />
           <Route path="/projectsearch" element={<ProjectSearch />} />
           <Route path="/institutes" element={<InstituteList />} />
-          <Route path="/institutes/:id" element={<InstituteDetail />} />
-          <Route path="/institutes/new" element={<InstituteForm />} />
+          {/* <Route path="/institutes/:id" element={<InstituteDetail />} /> */}
+          {/* <Route path="/institutes/new" element={<InstituteForm />} /> */}
           <Route path="/users" element={<UserList />} />
           <Route path="/posts" element={<PostList />} />
           <Route path="/reposts" element={<Repost />} />
           <Route path="/projectfield/:id" element={<ProjectField />} />
           <Route path="/projects/:id" element={<ProjectList />} />
-          <Route path="/projects/:id/posts" element={<ProjectPosts />} />
+          {/* <Route path="/projects/:id/posts" element={<ProjectPosts />} /> */}
           <Route path="/medialist" element={<MediaList />} />
           <Route path="/expersearch/" element={<ExperSearch />} />
           <Route path="/projectresult/:id" element={<ProjectResult />} />
@@ -75,16 +73,16 @@ function App() {
               case 1:
                 navigate('/postsearch');
                 break;
+              // case 2:
+              //   navigate('/projectsearch');
+              //   break;
               case 2:
-                navigate('/projectsearch');
-                break;
-              case 3:
                 navigate('/institutes');
                 break;
-              case 4:
+              case 3:
                 navigate('/users');
                 break;
-              case 5:
+              case 4:
                 navigate('/medialist');
                 break;
               default:
@@ -104,7 +102,7 @@ function App() {
         >
           <BottomNavigationAction label="Experiment Search" icon={<ScienceIcon />} />
           <BottomNavigationAction label="Post Search" icon={<SearchIcon />} />
-          <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} />
+          {/* <BottomNavigationAction label="Project Search" icon={<ProjectIcon />} /> */}
           <BottomNavigationAction label="Institutes" icon={<SchoolIcon />} />
           <BottomNavigationAction label="Users" icon={<GroupIcon />} />
           <BottomNavigationAction label="Media" icon={<MediaIcon />} />
