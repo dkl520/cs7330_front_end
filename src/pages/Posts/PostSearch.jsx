@@ -170,7 +170,19 @@ const PostSearch = () => {
     const handleSearch = async () => {
         setShowFilters(false)
         try {
-            const response = await window.$api.search.PostSearch(searchData);
+            // 创建一个新的搜索数据对象，用于格式化日期
+            const formattedSearchData = { ...searchData };
+            // 格式化开始日期（如果存在）
+            if (formattedSearchData.start_date) {
+                const startDate = new Date(formattedSearchData.start_date);
+                formattedSearchData.start_date = `${(startDate.getMonth() + 1).toString().padStart(2, '0')}/${startDate.getDate().toString().padStart(2, '0')}/${startDate.getFullYear()}`;
+            }
+            // 格式化结束日期（如果存在）
+            if (formattedSearchData.end_date) {
+                const endDate = new Date(formattedSearchData.end_date);
+                formattedSearchData.end_date = `${(endDate.getMonth() + 1).toString().padStart(2, '0')}/${endDate.getDate().toString().padStart(2, '0')}/${endDate.getFullYear()}`;
+            }
+            const response = await window.$api.search.PostSearch(formattedSearchData);
             setPosts(response);
         } catch (error) {
             console.error('Failed to fetch field list:', error);
@@ -305,33 +317,35 @@ const PostSearch = () => {
                                 />
 
 
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label="Start Date"
-                                        value={searchData.start_date}
-                                        onChange={(date) => handleFilterChange('start_date', date)}
-                                        slotProps={{
-                                            textField: {
-                                                sx: { width: '220px' },
-                                                size: "small"
-                                            }
-                                        }}
-                                    />
-                                </LocalizationProvider>
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label="Start Date"
+                                            value={searchData.start_date}
+                                            onChange={(date) => handleFilterChange('start_date', date)}
+                                            slotProps={{
+                                                textField: {
+                                                    sx: { width: '220px' },
+                                                    size: "small"
+                                                }
+                                            }}
+                                        />
+                                    </LocalizationProvider>
 
-                                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                    <DatePicker
-                                        label="End Date"
-                                        value={searchData.end_date}
-                                        onChange={(date) => handleFilterChange('end_date', date)}
-                                        slotProps={{
-                                            textField: {
-                                                sx: { width: '220px' },
-                                                size: "small"
-                                            }
-                                        }}
-                                    />
-                                </LocalizationProvider>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                        <DatePicker
+                                            label="End Date"
+                                            value={searchData.end_date}
+                                            onChange={(date) => handleFilterChange('end_date', date)}
+                                            slotProps={{
+                                                textField: {
+                                                    sx: { width: '220px' },
+                                                    size: "small"
+                                                }
+                                            }}
+                                        />
+                                    </LocalizationProvider>
+                                </Box>
                             </Box>
 
                             <Stack direction="row" spacing={2} justifyContent="flex-end">
