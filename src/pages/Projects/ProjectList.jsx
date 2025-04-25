@@ -249,7 +249,8 @@ const ProjectList = () => {
                                         </Tooltip>
 
                                         <IconButton
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.stopPropagation();
                                                 setCurrentProject(project);
                                                 setDeleteDialogOpen(true);
                                             }}

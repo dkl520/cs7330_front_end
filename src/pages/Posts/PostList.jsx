@@ -335,7 +335,7 @@ const PostList = () => {
             borderRadius: 3,
             textAlign: 'center',
             overflow: 'auto',
-            height: '70vh',
+            // height: '70vh',
             maxHeight: '70vh',
             bgcolor: alpha(theme.palette.primary.light, 0.1),
             border: `1px dashed ${theme.palette.primary.main}`

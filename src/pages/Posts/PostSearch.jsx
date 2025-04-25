@@ -12,7 +12,8 @@ import {
     Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, TablePagination, Chip, alpha,
     Card, CardContent, Avatar, CircularProgress, useTheme,
-    Collapse, IconButton, Dialog, DialogTitle, DialogContent, DialogActions
+    Collapse, IconButton, Dialog, DialogTitle, DialogContent, DialogActions,
+    Popover
 } from '@mui/material';
 
 import {
@@ -25,10 +26,12 @@ import {
     LocationOn as LocationIcon,
     Science as ScienceIcon,
     SearchOff as SearchOffIcon,
-    // AccessTime as TimeIcon,
     Send as SendIcon,
     Repeat as RepeatIcon,
-    AccessTime as AccessTimeIcon
+    AccessTime as AccessTimeIcon,
+    Person as PersonIcon,
+    Info as InfoIcon,
+    Close as CloseIcon
 } from '@mui/icons-material';
 
 
@@ -50,6 +53,10 @@ const PostSearch = () => {
     const [loading, setLoading] = useState(false);
     const [mediaList, setMediaList] = useState([]);
 
+    // 弹出框状态
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [projectData, setProjectData] = useState([]);
     const theme = useTheme();
     // Mock data
 
@@ -58,7 +65,88 @@ const PostSearch = () => {
         fetchSocialMedia();
     }, []);
 
+    // 示例项目数据
+    // const projectData = [
+    //     {
+    //         "project_id": 2,
+    //         "project_name": "AI Healthcare",
+    //         "fields": [
+    //             {
+    //                 "field_id": 5,
+    //                 "field_name": "水水水水",
+    //                 "percentage": 33.33,
+    //                 "result": [
+    //                     {
+    //                         "post_id": 1,
+    //                         "value": "0.9"
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         "project_id": 4,
+    //         "project_name": "Quantum Sim",
+    //         "fields": [
+    //             {
+    //                 "field_id": 11,
+    //                 "field_name": "贝贝",
+    //                 "percentage": 33.33,
+    //                 "result": [
+    //                     {
+    //                         "post_id": 1,
+    //                         "value": "0.89"
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         "project_id": 1,
+    //         "project_name": "浙大2",
+    //         "fields": [
+    //             {
+    //                 "field_id": 3,
+    //                 "field_name": "冷漠",
+    //                 "percentage": 33.33,
+    //                 "result": [
+    //                     {
+    //                         "post_id": 1,
+    //                         "value": "强强强强"
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     }
+    // ];
 
+    const fetchProjectData = async (post) => {
+        try {
+            const post_id = post.post_id;
+            const response = await window.$api.search.advancedSearch({ post_id });
+            setProjectData(response);
+        } catch (error) {
+            console.error('Failed to fetch field list:', error);
+            setProjectData([]);
+        } finally {
+
+        }
+
+    }
+    // 处理帖子点击事件
+    const handleCardClick = (event, post) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedPost(post);
+        fetchProjectData(post);
+    };
+
+    // 关闭弹出框
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedPost(null);
+    };
+
+    const open = Boolean(anchorEl);
 
     const fetchSocialMedia = async () => {
         try {
@@ -297,13 +385,14 @@ const PostSearch = () => {
             ) : (
                 <Paper
                     elevation={3}
-                    sx={{ borderRadius: 3, overflow:'auto',  maxHeight: '72vh' }}
+                    sx={{ borderRadius: 3, overflow: 'auto', maxHeight: '72vh' }}
                 >
                     <Stack spacing={3}>
-                        {posts.map((post,i) => (
+                        {posts.map((post, i) => (
                             <Card
                                 key={i}
                                 elevation={0}
+                                onClick={(e) => handleCardClick(e, post)}
                                 sx={{
                                     borderRadius: 3,
                                     overflow: 'hidden',
@@ -314,7 +403,8 @@ const PostSearch = () => {
                                     '&:hover': {
                                         transform: 'translateY(-4px)',
                                         boxShadow: `0 14px 28px -12px ${alpha(theme.palette.grey[700], 0.15)}`,
-                                        borderColor: alpha(theme.palette.primary.main, 0.3)
+                                        borderColor: alpha(theme.palette.primary.main, 0.3),
+                                        cursor: 'pointer'
                                     }
                                 }}
                             >
@@ -452,6 +542,15 @@ const PostSearch = () => {
                                                         }
                                                     }}
                                                 />
+
+                                                <InfoIcon
+                                                    fontSize="small"
+                                                    sx={{
+                                                        ml: 'auto',
+                                                        color: theme.palette.info.main,
+                                                        opacity: 0.7
+                                                    }}
+                                                />
                                             </Stack>
                                         </Box>
                                     </Box>
@@ -462,13 +561,114 @@ const PostSearch = () => {
                 </Paper>
             )}
 
-            {/* Add the getRandomColor function if it's not already defined elsewhere */}
-            {/* 
+            {/* 项目数据弹出框 */}
+            <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'left',
+                }}
+                sx={{
+                    '& .MuiPopover-paper': {
+                        width: 320,
+                        maxHeight: 400,
+                        borderRadius: 2,
+                        boxShadow: `0 12px 28px ${alpha(theme.palette.grey[900], 0.2)}`,
+                        border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                        overflow: 'hidden'
+                    }
+                }}
+            >
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    p: 2,
+                    borderBottom: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+                    bgcolor: alpha(theme.palette.primary.main, 0.05)
+                }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem' }}>
+                        项目分析数据
+                    </Typography>
+                    <IconButton size="small" onClick={handleClose}>
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                </Box>
 
-*/}
+                <Box sx={{ maxHeight: 320, overflow: 'auto', p: 1 }}>
+                    {projectData.map((project, index) => (
+                        <Box
+                            key={project.project_id}
+                            sx={{
+                                mb: 2,
+                                p: 1.5,
+                                borderRadius: 2,
+                                background: alpha(theme.palette.background.default, 0.6),
+                                border: `1px solid ${alpha(theme.palette.grey[200], 0.8)}`,
+                                '&:hover': {
+                                    background: alpha(theme.palette.background.default, 0.9),
+                                }
+                            }}
+                        >
+                            <Typography
+                                variant="subtitle1"
+                                sx={{
+                                    fontWeight: 600,
+                                    mb: 1,
+                                    color: theme.palette.primary.dark,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 0.5
+                                }}
+                            >
+                                <ScienceIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
+                                {project.project_name}
+                            </Typography>
 
+                            <Divider sx={{ mb: 1.5, opacity: 0.6 }} />
 
+                            {project.fields.map((field) => (
+                                <Box
+                                    key={field.field_id}
+                                    sx={{ mb: 1.5 }}
+                                >
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+                                        <Typography variant="body2" sx={{ fontWeight: 500, color: theme.palette.text.secondary }}>
+                                            {field.field_name}
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: theme.palette.info.main, fontWeight: 500 }}>
+                                            {field.percentage}%
+                                        </Typography>
+                                    </Box>
 
+                                    {field.result.map((result) => (
+
+                                        <Chip
+                                            key={result.post_id}
+                                            label={`ID: ${result.post_id}, 值: ${result.value}`}
+                                            size="small"
+                                            sx={{
+                                                mt: 0.5,
+                                                bgcolor: alpha(theme.palette.success.main, 0.05),
+                                                color: theme.palette.success.dark,
+                                                fontWeight: 500,
+                                                border: `1px solid ${alpha(theme.palette.success.main, 0.2)}`,
+                                            }}
+                                        />
+
+                                    ))}
+                                </Box>
+                            ))}
+                        </Box>
+                    ))}
+                </Box>
+            </Popover>
         </Container>
     );
 };

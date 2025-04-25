@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -40,19 +39,51 @@ import {
   Refresh as RefreshIcon
 } from '@mui/icons-material';
 
-// 用户表单组件
+// 用户头像组件
+const UserAvatar = ({ user }) => {
+  const stringToColor = (string) => {
+    let hash = 0;
+    for (let i = 0; i < string.length; i++) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    return color;
+  };
+
+  const bgColor = stringToColor(user.username);
+  const initials = `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
+
+  return (
+    <Avatar sx={{ bgcolor: bgColor, width: 50, height: 50, mr: 2 }}>
+      {initials}
+    </Avatar>
+  );
+};
+
 // 用户表单组件：一列布局，每个字段独占一行
-const UserForm = ({ formData, setFormData }) => (
+const UserForm = ({ formData, setFormData, mediaList }) => (
   <Box component="form" sx={{ mt: 3 }}>
     <Stack spacing={2}>
-      {/* <TextField
-        fullWidth
-        required
-        label="Media ID"
-        variant="outlined"
-        value={formData.media_id}
-        onChange={e => setFormData({ ...formData, media_id: e.target.value })}
-      /> */}
+      <FormControl sx={{ width: '220px' }} size="small">
+        <InputLabel>Social Media Platform</InputLabel>
+        <Select
+          value={formData.media_id}
+          label="Social Media Platform"
+          onChange={e => setFormData({ ...formData, media_id: e.target.value })}
+        >
+          <MenuItem value="">All</MenuItem>
+          {mediaList.map(option => (
+            <MenuItem key={option.media_id} value={option.media_id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
       <TextField
         fullWidth
         required
@@ -124,32 +155,6 @@ const UserForm = ({ formData, setFormData }) => (
   </Box>
 );
 
-
-// 用户头像组件
-const UserAvatar = ({ user }) => {
-  const stringToColor = (string) => {
-    let hash = 0;
-    for (let i = 0; i < string.length; i++) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    let color = '#';
-    for (let i = 0; i < 3; i++) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    return color;
-  };
-
-  const bgColor = stringToColor(user.username);
-  const initials = `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
-
-  return (
-    <Avatar sx={{ bgcolor: bgColor, width: 50, height: 50, mr: 2 }}>
-      {initials}
-    </Avatar>
-  );
-};
-
 const UserList = () => {
   const [users, setUsers] = useState([]);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -157,7 +162,9 @@ const UserList = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mediaList, setMediaList] = useState([]);
   const navigate = useNavigate();
+
   const emptyUserData = {
     media_id: '',
     user_id: '',
@@ -172,6 +179,16 @@ const UserList = () => {
   };
 
   const [formData, setFormData] = useState(emptyUserData);
+
+  const fetchSocialMedia = async () => {
+    try {
+      const response = await window.$api.media.list();
+      setMediaList(response);
+    } catch (error) {
+      console.error('Failed to fetch field list:', error);
+      setMediaList([]);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -188,6 +205,7 @@ const UserList = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchSocialMedia();
   }, []);
 
   const handleAdd = async () => {
@@ -272,14 +290,11 @@ const UserList = () => {
         </Box>
       </Paper>
 
-
       <Paper
         elevation={2}
-
         sx={{
           borderRadius: 3,
           overflow: 'auto',
-          // height: '70vh',
           maxHeight: '70vh',
           boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
         }}
@@ -294,100 +309,99 @@ const UserList = () => {
               Add the first user
             </Button>
           </Box>
-        )
-          : (
-            <List disablePadding>
-              {users.map((user, index) => (
-                <Box key={user.user_id}>
-                  <ListItem
-                    sx={{
-                      py: 2.5,
-                      px: 3,
-                      transition: 'all 0.2s',
-                      '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.03)' },
-                    }}
-                    onClick={() => navigate(`/posts?user_id=${user.user_id}&media_id=${user.media_id}`)}
-                  >
-                    <UserAvatar user={user} />
-                    <ListItemText
-                      primary={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-                          <Typography variant="h6" sx={{ fontWeight: 500 }}>
-                            {user.username}
-                          </Typography>
-                          {user.is_verified && (
-                            <Tooltip title="Verified User">
-                              <VerifiedIcon color="primary" sx={{ fontSize: 20 }} />
-                            </Tooltip>
-                          )}
-                        </Box>
-                      }
-                      secondary={
-                        <>
-                          <Typography variant="body2" sx={{ mb: 1 }}>
-                            {user.first_name} {user.last_name} • {user.age} years old •{' '}
-                            {user.gender === 'male'
-                              ? 'Male'
-                              : user.gender === 'female'
-                                ? 'Female'
-                                : 'Other'}
-                          </Typography>
-                          <Stack direction="row" spacing={1}>
-                            <Chip
-                              label={`Birth: ${user.country_of_birth}`}
-                              size="small"
-                              variant="outlined"
-                              sx={{ borderRadius: 1 }}
-                            />
-                            <Chip
-                              label={`Residence: ${user.country_of_residence}`}
-                              size="small"
-                              variant="outlined"
-                              sx={{ borderRadius: 1 }}
-                            />
-                          </Stack>
-                        </>
-                      }
-                      secondaryTypographyProps={{ component: 'div' }}
-                    />
-                    <Stack direction="row" spacing={1}>
-                      <Tooltip title="Edit">
-                        <IconButton
-                          onClick={(e) => handleEditClick(user, e)}
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-                            '&:hover': { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) },
-                          }}
-                          size="small"
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Delete">
-                        <IconButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentUser(user);
-                            setDeleteDialogOpen(true);
-                          }}
-                          sx={{
-                            color: 'error.main',
-                            bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
-                            '&:hover': { bgcolor: (theme) => alpha(theme.palette.error.main, 0.2) },
-                          }}
-                          size="small"
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </Stack>
-                  </ListItem>
-                  {index < users.length - 1 && <Divider />}
-                </Box>
-              ))}
-            </List>
-          )}
+        ) : (
+          <List disablePadding>
+            {users.map((user, index) => (
+              <Box key={user.user_id}>
+                <ListItem
+                  sx={{
+                    py: 2.5,
+                    px: 3,
+                    transition: 'all 0.2s',
+                    '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.03)' },
+                  }}
+                  onClick={() => navigate(`/posts?user_id=${user.user_id}&media_id=${user.media_id}`)}
+                >
+                  <UserAvatar user={user} />
+                  <ListItemText
+                    primary={
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                        <Typography variant="h6" sx={{ fontWeight: 500 }}>
+                          {user.username}
+                        </Typography>
+                        {user.is_verified && (
+                          <Tooltip title="Verified User">
+                            <VerifiedIcon color="primary" sx={{ fontSize: 20 }} />
+                          </Tooltip>
+                        )}
+                      </Box>
+                    }
+                    secondary={
+                      <>
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                          {user.first_name} {user.last_name} • {user.age} years old •{' '}
+                          {user.gender === 'male'
+                            ? 'Male'
+                            : user.gender === 'female'
+                              ? 'Female'
+                              : 'Other'}
+                        </Typography>
+                        <Stack direction="row" spacing={1}>
+                          <Chip
+                            label={`Birth: ${user.country_of_birth}`}
+                            size="small"
+                            variant="outlined"
+                            sx={{ borderRadius: 1 }}
+                          />
+                          <Chip
+                            label={`Residence: ${user.country_of_residence}`}
+                            size="small"
+                            variant="outlined"
+                            sx={{ borderRadius: 1 }}
+                          />
+                        </Stack>
+                      </>
+                    }
+                    secondaryTypographyProps={{ component: 'div' }}
+                  />
+                  <Stack direction="row" spacing={1}>
+                    <Tooltip title="Edit">
+                      <IconButton
+                        onClick={(e) => handleEditClick(user, e)}
+                        sx={{
+                          color: 'primary.main',
+                          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+                          '&:hover': { bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2) },
+                        }}
+                        size="small"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentUser(user);
+                          setDeleteDialogOpen(true);
+                        }}
+                        sx={{
+                          color: 'error.main',
+                          bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
+                          '&:hover': { bgcolor: (theme) => alpha(theme.palette.error.main, 0.2) },
+                        }}
+                        size="small"
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </ListItem>
+                {index < users.length - 1 && <Divider />}
+              </Box>
+            ))}
+          </List>
+        )}
       </Paper>
 
       {/* 添加用户对话框 */}
@@ -404,7 +418,7 @@ const UserList = () => {
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ px: 3 }}>
-          <UserForm formData={formData} setFormData={setFormData} />
+          <UserForm formData={formData} setFormData={setFormData} mediaList={mediaList} />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button onClick={() => setAddDialogOpen(false)} variant="outlined">
@@ -415,7 +429,6 @@ const UserList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <Dialog
         open={editDialogOpen}
@@ -430,7 +443,7 @@ const UserList = () => {
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ px: 3 }}>
-          <UserForm formData={formData} setFormData={setFormData} />
+          <UserForm formData={formData} setFormData={setFormData} mediaList={mediaList} />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button onClick={() => setEditDialogOpen(false)} variant="outlined">
@@ -462,7 +475,6 @@ const UserList = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
     </Container>
   );
 };

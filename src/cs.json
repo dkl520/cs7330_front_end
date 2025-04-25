@@ -1,0 +1,82 @@
+[
+    {
+        "result": [
+            {
+                "fields": [
+                    {
+                        "results": [
+                            {
+                                "value": "0.22",
+                                "post_id": 7
+                            }
+                        ],
+                        "field_id": 22,
+                        "field_name": "weibo1情绪",
+                        "filled_percentage": "100.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 23,
+                        "field_name": "微博 政治敏感度",
+                        "filled_percentage": "0.0%"
+                    },
+                    {
+                        "results": [
+                            {
+                                "value": "0.33",
+                                "post_id": 7
+                            }
+                        ],
+                        "field_id": 24,
+                        "field_name": "微博 色情敏感度",
+                        "filled_percentage": "100.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 25,
+                        "field_name": "微博犯罪敏感度",
+                        "filled_percentage": "0.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 26,
+                        "field_name": "微博lgbt敏感度",
+                        "filled_percentage": "0.0%"
+                    }
+                ],
+                "project_id": 6,
+                "project_name": "weibo 研究项目"
+            },
+            {
+                "fields": [
+                    {
+                        "results": [],
+                        "field_id": 27,
+                        "field_name": "weibo项目2字段",
+                        "filled_percentage": "0.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 28,
+                        "field_name": "微博项目2字段2",
+                        "filled_percentage": "0.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 29,
+                        "field_name": "微博项目2字段3",
+                        "filled_percentage": "0.0%"
+                    },
+                    {
+                        "results": [],
+                        "field_id": 30,
+                        "field_name": "微博项目2字段4",
+                        "filled_percentage": "0.0%"
+                    }
+                ],
+                "project_id": 7,
+                "project_name": "weib研究项目2"
+            }
+        ]
+    }
+]
