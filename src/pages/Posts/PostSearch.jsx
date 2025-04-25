@@ -608,7 +608,7 @@ const PostSearch = () => {
                     bgcolor: alpha(theme.palette.primary.main, 0.05)
                 }}>
                     <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1rem' }}>
-                        项目分析数据
+                    Project analysis data
                     </Typography>
                     <IconButton size="small" onClick={handleClose}>
                         <CloseIcon fontSize="small" />
