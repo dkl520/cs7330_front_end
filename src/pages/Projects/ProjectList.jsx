@@ -22,7 +22,8 @@ import {
     DialogContentText,
     DialogActions,
     alpha,
-    TextField
+    TextField,
+    Tooltip
 } from '@mui/material';
 import {
     CalendarToday as CalendarIcon,
@@ -37,12 +38,12 @@ import {
 const ProjectForm = ({ formData, setFormData }) => {
 
 
-    // 格式化 Date → "YYYY-MM-DD"
+    // Format Date → "YYYY-MM-DD"
     const formatDate = (date) => {
         if (!date) return '';
         return date.toISOString().split('T')[0];
     };
-    // 把 "YYYY-MM-DD" 转成 Date
+    // Convert "YYYY-MM-DD" to Date
     const parseDate = (dateStr) => {
         if (!dateStr) return null;
         const [y, m, d] = dateStr.split('-').map(Number);
@@ -131,7 +132,7 @@ const ProjectList = () => {
             const response = await window.$api.project.list({ institute_id: id });
             setProjects(response || []);
         } catch (error) {
-            console.error('获取项目列表失败:', error);
+            console.error('Failed to fetch project list:', error);
             setProjects([]);
         } finally {
             setLoading(false);
@@ -149,7 +150,7 @@ const ProjectList = () => {
             setFormData(emptyProjectData);
             await fetchProjects();
         } catch (error) {
-            console.error('创建项目失败:', error);
+            console.error('Failed to create project:', error);
         }
     };
 
@@ -161,7 +162,7 @@ const ProjectList = () => {
             setFormData(emptyProjectData);
             await fetchProjects();
         } catch (error) {
-            console.error('更新项目失败:', error);
+            console.error('Failed to update project:', error);
         }
     };
 
@@ -172,7 +173,7 @@ const ProjectList = () => {
             setCurrentProject(null);
             await fetchProjects();
         } catch (error) {
-            console.error('删除项目失败:', error);
+            console.error('Failed to delete project:', error);
         }
     };
 
@@ -305,22 +306,22 @@ const ProjectList = () => {
                 </List>
             </Paper>
 
-            {/* 添加项目对话框 */}
+            {/* Add Project Dialog */}
             <Dialog open={addDialogOpen} onClose={() => setAddDialogOpen(false)} fullWidth maxWidth="sm">
-                <DialogTitle component="div">添加新项目</DialogTitle>
+                <DialogTitle component="div">Add New Project</DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ mb: 2 }}>请填写项目基本信息</DialogContentText>
+                    <DialogContentText sx={{ mb: 2 }}>Please fill in the project basic information</DialogContentText>
                     <ProjectForm formData={formData} setFormData={setFormData} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setAddDialogOpen(false)}>取消</Button>
+                    <Button onClick={() => setAddDialogOpen(false)}>Cancel</Button>
                     <Button onClick={handleAdd} variant="contained">
-                        添加
+                        Add
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* 编辑项目对话框 */}
+            {/* Edit Project Dialog */}
             <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} fullWidth maxWidth="sm">
                 <DialogTitle component="div">Edit Project</DialogTitle>
                 <DialogContent>
