@@ -207,7 +207,7 @@ export default function RepostList() {
       >
         {reposts.length === 0 ? (
           <Box p={3}>
-            <Typography>暂无转发数据</Typography>
+            <Typography>There is no forwarded data for the time being</Typography>
           </Box>
         ) : (
           reposts.map((repost, index) => {
