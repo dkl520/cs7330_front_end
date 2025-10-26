@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
+const baseURL = import.meta.env.VITE_API_BASE || '/api';
+
+console.log(">>> API base URL:", baseURL); // 方便你确认线上打印结果
+
 
 const axiosInstance = axios.create({
   baseURL,
